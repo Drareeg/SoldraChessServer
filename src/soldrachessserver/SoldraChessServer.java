@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package soldrachessserver;
 
 /**
@@ -17,6 +16,7 @@ public class SoldraChessServer {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        //nog eens nen test
     }
-    
+
 }
