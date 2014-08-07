@@ -1,0 +1,4 @@
+SoldraChessServer
+=================
+
+Chess variants server
