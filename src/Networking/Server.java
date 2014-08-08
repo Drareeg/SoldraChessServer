@@ -75,6 +75,7 @@ public class Server {
         System.out.println("broadcasting to " + clients.size());
         for (ObjectOutputStream oos : ooss) {
             try {
+                oos.reset();
                 oos.writeUnshared(message);
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
