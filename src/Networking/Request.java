@@ -23,38 +23,11 @@
  */
 package Networking;
 
-import java.net.ServerSocket;
-import java.net.Socket;
-
 /**
  *
  * @author Dries
  */
-public class Server {
+public enum Request {
 
-    private ServerSocket providerSocket;
-    private Socket connection = null;
-
-    public Server() {
-        try {
-            providerSocket = new ServerSocket(12345, 10);
-            System.out.println("Beep Boop: server is running");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        run();
-    }
-
-    private void run() {
-        while (true) {
-            try {
-                connection = providerSocket.accept();
-                System.out.println("Connection received from " + connection.getInetAddress().getHostName());
-                new LobbyRequestThread(connection).start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
+    LOBBY_LIST_REQUEST
 }
