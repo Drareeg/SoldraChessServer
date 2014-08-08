@@ -22,42 +22,22 @@
  * THE SOFTWARE.
  */
 package Networking;
-
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  *
- * @author Dries
+ * @author Geerard
  */
-public class LobbyRequestThread extends Thread {
+public class LobbyMessage implements Message {
 
-    private ObjectOutputStream oos;
-    private ObjectInputStream ois;
-    private final Socket connection;
+    private ArrayList<String> usernames;
 
-    public LobbyRequestThread(Socket connection) {
-        this.connection = connection;
+    public LobbyMessage(ArrayList<String> usernames) {
+        this.usernames = usernames;
     }
 
-    public void run() {
-        try {
-            oos = new ObjectOutputStream(connection.getOutputStream());
-            oos.flush();
-            ois = new ObjectInputStream(connection.getInputStream());
-            Object[] request = (Object[]) ois.readObject();
-            Request requestMethod = (Request) request[0];
-            int clientID = (int) request[1];
-            System.out.println("Client connection id: " + clientID + ", with request: " + requestMethod);
-            if (requestMethod.equals(Request.LOBBY_LIST_REQUEST)) {
-                oos.writeObject("Iere my boy, AKA " + clientID + ", de lijste");
-            }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
+    public ArrayList<String> getUsernames() {
+        return usernames;
     }
+
 }

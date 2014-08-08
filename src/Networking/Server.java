@@ -23,8 +23,14 @@
  */
 package Networking;
 
-import java.net.ServerSocket;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -32,29 +38,48 @@ import java.net.Socket;
  */
 public class Server {
 
-    private ServerSocket providerSocket;
-    private Socket connection = null;
+    private Collection<Socket> clients;
+    private ArrayList<String> usernames;
+    private ArrayList<ObjectOutputStream> ooss;
 
     public Server() {
-        try {
-            providerSocket = new ServerSocket(12345, 10);
-            System.out.println("Beep Boop: server is running");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        run();
+        clients = new ArrayList<>();
+        usernames = new ArrayList<>();
+        ooss = new ArrayList<>();
+        System.out.println("Beep Boop: server is running");
+        new ConnectionAccepterThread(this).start();
+        System.out.println("Server is now accepting connections");
+        //hier die messagequeue loopen
     }
 
-    private void run() {
-        while (true) {
+    //dit beter niet zomaar oproepen vanaf de connectionaccepterthread, maar wel op de "servereventthread" -> dus zo aan een messagequeue adden, of hoe dat ook alweer gaat.
+    public void newConnection(Socket connection) {
+        ObjectOutputStream oos = null;
+        try {
+            oos = new ObjectOutputStream(connection.getOutputStream());
+            oos.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        new ListenToOneClientThread(connection, this).start();
+        clients.add(connection);
+        ooss.add(oos);
+    }
+
+    void addUserName(String username) {
+        usernames.add(username);
+        broadcast(new LobbyMessage(usernames));
+    }
+
+    private void broadcast(Message message) {
+        System.out.println("broadcasting to " + clients.size());
+        for (ObjectOutputStream oos : ooss) {
             try {
-                connection = providerSocket.accept();
-                System.out.println("Connection received from " + connection.getInetAddress().getHostName());
-                new LobbyRequestThread(connection).start();
-            } catch (Exception e) {
-                e.printStackTrace();
+                oos.writeUnshared(message);
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        System.out.println("broadcasting done");
     }
-
 }
