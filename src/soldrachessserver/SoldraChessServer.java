@@ -5,6 +5,8 @@
  */
 package soldrachessserver;
 
+import Networking.Server;
+
 /**
  *
  * @author Dries
@@ -17,6 +19,7 @@ public class SoldraChessServer {
     public static void main(String[] args) {
         // TODO code application logic here
         //nog eens nen test
+        Server server = new Server();
     }
 
 }
