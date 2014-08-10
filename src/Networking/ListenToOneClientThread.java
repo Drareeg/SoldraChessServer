@@ -25,7 +25,6 @@ package Networking;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,12 +39,14 @@ public class ListenToOneClientThread extends Thread {
     private final Socket connection;
     private Server server;
 
+    //ipv server meegeven kunnen we ook messagequeue megeven.
+    //voordeel van queue meegeven: dan kunnen we dat dynamisch veranderen om bv messages te accepten direct 
+    //in de queue van 1 game (als we later alle eventverwerking niet meer op 1 thread zouden doen, that is.)
     public ListenToOneClientThread(Socket connection, Server server) {
         this.connection = connection;
         this.server = server;
     }
 
-    //deze thread moet ook messages kunnen posten in de queue van de server, voorlopig nog via methodeoproep en server meegeven.
     public void run() {
         try {
             ois = new ObjectInputStream(connection.getInputStream());
@@ -58,10 +59,7 @@ public class ListenToOneClientThread extends Thread {
             try {
                 Object incoming = ois.readObject();
                 if (incoming != null) {
-                    System.out.println("received message != null");
-                    if (incoming instanceof ConnectMessage) {
-                        server.addUserName(((ConnectMessage) incoming).getUsername());
-                    }
+                    server.addMessage((Message) incoming);
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ListenToOneClientThread.class.getName()).log(Level.SEVERE, null, ex);

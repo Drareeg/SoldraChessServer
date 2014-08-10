@@ -28,7 +28,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +42,8 @@ public class Server {
     private Collection<Socket> clients;
     private ArrayList<String> usernames;
     private ArrayList<ObjectOutputStream> ooss;
+    //incoming messages from all clients
+    private LinkedBlockingQueue<Message> messageQueue;
 
     public Server() {
         clients = new ArrayList<>();
@@ -49,7 +52,31 @@ public class Server {
         System.out.println("Beep Boop: server is running");
         new ConnectionAccepterThread(this).start();
         System.out.println("Server is now accepting connections");
-        //hier die messagequeue loopen
+        messageQueue = new LinkedBlockingQueue<Message>();
+        handleIncomingMessages();
+    }
+
+    public void addMessage(Message message) {
+        messageQueue.add(message);
+    }
+
+    private void handleIncomingMessages() {
+        while (true) {
+            try {
+                //na een jaar zonder message hebt ge een probleem
+                Message toHandle = messageQueue.poll(356, TimeUnit.DAYS);
+                System.out.println("Handling a message");
+                if (toHandle == null) {
+                    System.out.println("Blocking queue doet niet wat ge denkt dat het doet!");
+                }
+                //handle message
+                if (toHandle instanceof ConnectMessage) {
+                    this.addUserName(((ConnectMessage) toHandle).getUsername());
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     //dit beter niet zomaar oproepen vanaf de connectionaccepterthread, maar wel op de "servereventthread" -> dus zo aan een messagequeue adden, of hoe dat ook alweer gaat.
