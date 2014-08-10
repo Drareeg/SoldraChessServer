@@ -23,6 +23,7 @@
  */
 package Networking;
 
+import Shared.Networking.Message;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -59,7 +60,7 @@ public class ListenToOneClientThread extends Thread {
             try {
                 Object incoming = ois.readObject();
                 if (incoming != null) {
-                    server.addMessage((Message) incoming);
+                    server.addMessage(((Message) incoming).setSource(connection));
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ListenToOneClientThread.class.getName()).log(Level.SEVERE, null, ex);

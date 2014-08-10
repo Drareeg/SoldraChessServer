@@ -1,3 +1,5 @@
+package Shared.Networking;
+
 /*
  * The MIT License
  *
@@ -21,23 +23,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Networking;
-import java.util.ArrayList;
+
 
 /**
- *
+ * C -> S: C joins with username
+ * S -> C: someone joined with username
  * @author Geerard
  */
-public class LobbyMessage implements Message {
+public class JoinLobbyMessage extends Message {
+    private String username;
 
-    private ArrayList<String> usernames;
-
-    public LobbyMessage(ArrayList<String> usernames) {
-        this.usernames = usernames;
+    public JoinLobbyMessage(String username) {
+        this.username = username;
     }
 
-    public ArrayList<String> getUsernames() {
-        return usernames;
+    public String getUsername() {
+        return username;
     }
 
 }

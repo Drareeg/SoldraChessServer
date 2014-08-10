@@ -26,12 +26,14 @@ package Networking;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import Shared.Networking.JoinLobbyMessage;
+import Shared.Networking.Message;
+import Shared.Networking.ThisIsTheLobbyMessage;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -39,19 +41,17 @@ import java.util.logging.Logger;
  */
 public class Server {
 
-    private Collection<Socket> clients;
-    private ArrayList<String> usernames;
-    private ArrayList<ObjectOutputStream> ooss;
+    private ConcurrentHashMap<Socket, ObjectOutputStream> clientOosMap;
+    private ConcurrentHashMap<Socket, String> clientUsernameMap;
     //incoming messages from all clients
     private LinkedBlockingQueue<Message> messageQueue;
 
     public Server() {
-        clients = new ArrayList<>();
-        usernames = new ArrayList<>();
-        ooss = new ArrayList<>();
+        clientOosMap = new ConcurrentHashMap<>();
+        clientUsernameMap = new ConcurrentHashMap<>();
         System.out.println("Beep Boop: server is running");
+        //start nieuwe ListenToOneClientThread per connectie die hij binnen krijgt.
         new ConnectionAccepterThread(this).start();
-        System.out.println("Server is now accepting connections");
         messageQueue = new LinkedBlockingQueue<Message>();
         handleIncomingMessages();
     }
@@ -65,13 +65,8 @@ public class Server {
             try {
                 //na een jaar zonder message hebt ge een probleem
                 Message toHandle = messageQueue.poll(356, TimeUnit.DAYS);
-                System.out.println("Handling a message");
-                if (toHandle == null) {
-                    System.out.println("Blocking queue doet niet wat ge denkt dat het doet!");
-                }
-                //handle message
-                if (toHandle instanceof ConnectMessage) {
-                    this.addUserName(((ConnectMessage) toHandle).getUsername());
+                if (toHandle instanceof JoinLobbyMessage) {
+                    this.handleJoinLobby(((JoinLobbyMessage) toHandle));
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -79,28 +74,31 @@ public class Server {
         }
     }
 
-    //dit beter niet zomaar oproepen vanaf de connectionaccepterthread, maar wel op de "servereventthread" -> dus zo aan een messagequeue adden, of hoe dat ook alweer gaat.
-    public void newConnection(Socket connection) {
+    //aangeroepen vanaf de connectionaccepterthread
+    public void acceptNewConnection(Socket connection) {
         ObjectOutputStream oos = null;
         try {
             oos = new ObjectOutputStream(connection.getOutputStream());
+            //flush to send header, otherwise client keeps blocking
             oos.flush();
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
         new ListenToOneClientThread(connection, this).start();
-        clients.add(connection);
-        ooss.add(oos);
+        clientOosMap.put(connection, oos);
+
     }
 
-    void addUserName(String username) {
-        usernames.add(username);
-        broadcast(new LobbyMessage(usernames));
+    private void handleJoinLobby(JoinLobbyMessage message) {
+        ThisIsTheLobbyMessage thisIsTheLobbyMessage = new ThisIsTheLobbyMessage(clientUsernameMap.values());
+        sendMessage(message.getSource(), thisIsTheLobbyMessage);
+        clientUsernameMap.put(message.getSource(), message.getUsername());
+        broadcast(new JoinLobbyMessage(message.getUsername()));
     }
 
     private void broadcast(Message message) {
-        System.out.println("broadcasting to " + clients.size());
-        for (ObjectOutputStream oos : ooss) {
+        System.out.println("broadcasting to " + clientOosMap.size());
+        for (ObjectOutputStream oos : clientOosMap.values()) {
             try {
                 oos.reset();
                 oos.writeUnshared(message);
@@ -109,5 +107,14 @@ public class Server {
             }
         }
         System.out.println("broadcasting done");
+    }
+
+    private void sendMessage(Socket client, Message message) {
+        try {
+            clientOosMap.get(client).reset();
+            clientOosMap.get(client).writeUnshared(message);
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

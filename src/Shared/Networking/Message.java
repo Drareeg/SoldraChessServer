@@ -1,3 +1,5 @@
+package Shared.Networking;
+
 /*
  * The MIT License
  *
@@ -21,13 +23,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Networking;
+import java.io.Serializable;
+import java.net.Socket;
 
 /**
  *
- * @author Dries
+ * @author Geerard
  */
-public enum Request {
+public abstract class Message implements Serializable {
 
-    LOBBY_LIST_REQUEST
+    private Socket source;
+
+    //This is done when a message is received.
+    //You don't have to bother setting source when sending a message.
+    public Message setSource(Socket source) {
+        this.source = source;
+        return this;
+    }
+
+    public Socket getSource() {
+        return source;
+    }
 }

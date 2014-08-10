@@ -53,7 +53,7 @@ public class ConnectionAccepterThread extends Thread {
             try {
                 Socket connection = providerSocket.accept();
                 System.out.println("Connection received from " + connection.getInetAddress().getHostName());
-                server.newConnection(connection);
+                server.acceptNewConnection(connection);
             } catch (IOException ex) {
                 Logger.getLogger(ConnectionAccepterThread.class.getName()).log(Level.SEVERE, null, ex);
             }
