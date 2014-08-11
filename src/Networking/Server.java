@@ -23,6 +23,7 @@
  */
 package Networking;
 
+import Shared.Chess.Board;
 import Shared.Networking.ChallengeMessage;
 import Shared.Networking.GameStartMessage;
 import java.io.IOException;
@@ -34,6 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import Shared.Networking.JoinLobbyMessage;
 import Shared.Networking.Message;
+import Shared.Networking.MoveMessage;
 import Shared.Networking.ThisIsTheLobbyMessage;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -72,6 +74,9 @@ public class Server {
                 }
                 if(toHandle instanceof ChallengeMessage){
                     this.handleChallenge((ChallengeMessage) toHandle);
+                }
+                if(toHandle instanceof MoveMessage){
+                    this.handleMove((MoveMessage) toHandle);
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -123,14 +128,23 @@ public class Server {
         }
     }
 
+    private Board currentBoard;
+    
     private void handleChallenge(ChallengeMessage challengeMessage) {
+        //voorlopig efkes gwn 1 spel tegelijkertijd, later meerdere en uitzoeken bij welke de movemessages horen.
+        currentBoard = new Board();
         GameStartMessage message = new GameStartMessage();
         sendMessage(challengeMessage.getSource(), message);
         for(Socket client : clientUsernameMap.keySet()){
             if(clientUsernameMap.get(client).equals(challengeMessage.getTarget())){
                 sendMessage(client, message);
-            }
-            
+            }  
         }
+    }
+
+    private void handleMove(MoveMessage moveMessage) {
+        currentBoard.movePiece(moveMessage.getFromRow(), moveMessage.getFromCol(), moveMessage.getToRow(), moveMessage.getToCol());
+        //later enkel naar de 2 spelers van het spel zelf.
+        broadcast(moveMessage.setSource(null));
     }
 }
