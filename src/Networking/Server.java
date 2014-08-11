@@ -23,6 +23,8 @@
  */
 package Networking;
 
+import Shared.Networking.ChallengeMessage;
+import Shared.Networking.GameStartMessage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -67,6 +69,9 @@ public class Server {
                 Message toHandle = messageQueue.poll(356, TimeUnit.DAYS);
                 if (toHandle instanceof JoinLobbyMessage) {
                     this.handleJoinLobby(((JoinLobbyMessage) toHandle));
+                }
+                if(toHandle instanceof ChallengeMessage){
+                    this.handleChallenge((ChallengeMessage) toHandle);
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,6 +120,17 @@ public class Server {
             clientOosMap.get(client).writeUnshared(message);
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void handleChallenge(ChallengeMessage challengeMessage) {
+        GameStartMessage message = new GameStartMessage();
+        sendMessage(challengeMessage.getSource(), message);
+        for(Socket client : clientUsernameMap.keySet()){
+            if(clientUsernameMap.get(client).equals(challengeMessage.getTarget())){
+                sendMessage(client, message);
+            }
+            
         }
     }
 }
