@@ -23,8 +23,11 @@
  */
 package Shared.Networking;
 
+import Networking.Server;
+
 /**
- * C -> S: I challenge player target 
+ * C -> S: I challenge player target
+ *
  * @author Drareeg
  */
 public class ChallengeMessage extends Message {
@@ -38,6 +41,11 @@ public class ChallengeMessage extends Message {
 
     public String getTarget() {
         return target;
+    }
+
+    @Override
+    public void handleSelf(MessageHandler m) {
+        m.handleChallenge(this);
     }
 
 }

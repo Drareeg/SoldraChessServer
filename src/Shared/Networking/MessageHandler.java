@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Drareeg.
+ * Copyright 2014 Dries Weyme & Geerard Ponnet.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,47 +23,19 @@
  */
 package Shared.Networking;
 
-import Networking.Server;
-
 /**
- * C -> S: I do this move S -> C: this move was done
  *
- * @author Drareeg
+ * @author Dries
  */
-public class MoveMessage extends Message {
+public interface MessageHandler {
 
-    //best ook bevatten wie hij doet, zodat server reply niet geinterpreteerd kan worden als nieuwe zet
-    private int fromRow;
-    private int fromCol;
-    private int toRow;
-    private int toCol;
+    public void handleJoinLobby(JoinLobbyMessage message);
 
-    public MoveMessage(int fromRow, int fromCol, int toRow, int toCol) {
-        this.fromRow = fromRow;
-        this.fromCol = fromCol;
-        this.toRow = toRow;
-        this.toCol = toCol;
-    }
+    public void handleChallenge(ChallengeMessage challengeMessage);
 
-    public int getFromRow() {
-        return fromRow;
-    }
+    public void handleMove(MoveMessage moveMessage);
 
-    public int getFromCol() {
-        return fromCol;
-    }
+    public void handleGameStart(GameStartMessage gameStart);
 
-    public int getToRow() {
-        return toRow;
-    }
-
-    public int getToCol() {
-        return toCol;
-    }
-
-    @Override
-    public void handleSelf(MessageHandler m) {
-        m.handleMove(this);
-    }
-
+    public void handleThisIsTheLobbyMessage(ThisIsTheLobbyMessage thisIsTheLobby);
 }

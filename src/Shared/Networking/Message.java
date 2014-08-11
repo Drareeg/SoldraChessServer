@@ -23,6 +23,7 @@ package Shared.Networking;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import Networking.Server;
 import java.io.Serializable;
 import java.net.Socket;
 
@@ -44,4 +45,6 @@ public abstract class Message implements Serializable {
     public Socket getSource() {
         return source;
     }
+
+    public abstract void handleSelf(MessageHandler m);
 }

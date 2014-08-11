@@ -1,5 +1,7 @@
 package Shared.Networking;
 
+import Networking.Server;
+
 /*
  * The MIT License
  *
@@ -23,14 +25,13 @@ package Shared.Networking;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-
 /**
- * C -> S: C joins with username
- * S -> C: someone joined with username
+ * C -> S: C joins with username S -> C: someone joined with username
+ *
  * @author Geerard
  */
 public class JoinLobbyMessage extends Message {
+
     private String username;
 
     public JoinLobbyMessage(String username) {
@@ -39,6 +40,11 @@ public class JoinLobbyMessage extends Message {
 
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public void handleSelf(MessageHandler m) {
+        m.handleJoinLobby(this);
     }
 
 }

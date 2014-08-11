@@ -23,6 +23,7 @@
  */
 package Shared.Networking;
 
+import Networking.Server;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,15 +37,20 @@ public class ThisIsTheLobbyMessage extends Message {
 
     private Collection<String> usernames;
 
-     public ThisIsTheLobbyMessage(Collection<String> usernames) {
+    public ThisIsTheLobbyMessage(Collection<String> usernames) {
         //ziet er dom uit? probeer maar keer op de "slimme" manier ;)
         this.usernames = new ArrayList<>();
-        for(String name : usernames){
+        for (String name : usernames) {
             this.usernames.add(name);
         }
     }
 
     public Collection<String> getUsernames() {
         return usernames;
+    }
+
+    @Override
+    public void handleSelf(MessageHandler m) {
+        m.handleThisIsTheLobbyMessage(this);
     }
 }

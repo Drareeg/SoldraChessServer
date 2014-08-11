@@ -38,12 +38,13 @@ import Shared.Networking.Message;
 import Shared.Networking.MoveMessage;
 import Shared.Networking.ThisIsTheLobbyMessage;
 import java.util.concurrent.ConcurrentHashMap;
+import Shared.Networking.MessageHandler;
 
 /**
  *
  * @author Dries
  */
-public class Server {
+public class Server implements MessageHandler {
 
     private ConcurrentHashMap<Socket, ObjectOutputStream> clientOosMap;
     private ConcurrentHashMap<Socket, String> clientUsernameMap;
@@ -69,15 +70,7 @@ public class Server {
             try {
                 //na een jaar zonder message hebt ge een probleem
                 Message toHandle = messageQueue.poll(356, TimeUnit.DAYS);
-                if (toHandle instanceof JoinLobbyMessage) {
-                    this.handleJoinLobby(((JoinLobbyMessage) toHandle));
-                }
-                if(toHandle instanceof ChallengeMessage){
-                    this.handleChallenge((ChallengeMessage) toHandle);
-                }
-                if(toHandle instanceof MoveMessage){
-                    this.handleMove((MoveMessage) toHandle);
-                }
+                toHandle.handleSelf(this);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -99,7 +92,7 @@ public class Server {
 
     }
 
-    private void handleJoinLobby(JoinLobbyMessage message) {
+    public void handleJoinLobby(JoinLobbyMessage message) {
         ThisIsTheLobbyMessage thisIsTheLobbyMessage = new ThisIsTheLobbyMessage(clientUsernameMap.values());
         sendMessage(message.getSource(), thisIsTheLobbyMessage);
         clientUsernameMap.put(message.getSource(), message.getUsername());
@@ -129,22 +122,31 @@ public class Server {
     }
 
     private Board currentBoard;
-    
-    private void handleChallenge(ChallengeMessage challengeMessage) {
+
+    public void handleChallenge(ChallengeMessage challengeMessage) {
         //voorlopig efkes gwn 1 spel tegelijkertijd, later meerdere en uitzoeken bij welke de movemessages horen.
         currentBoard = new Board();
         GameStartMessage message = new GameStartMessage();
         sendMessage(challengeMessage.getSource(), message);
-        for(Socket client : clientUsernameMap.keySet()){
-            if(clientUsernameMap.get(client).equals(challengeMessage.getTarget())){
+        for (Socket client : clientUsernameMap.keySet()) {
+            if (clientUsernameMap.get(client).equals(challengeMessage.getTarget())) {
                 sendMessage(client, message);
-            }  
+            }
         }
     }
 
-    private void handleMove(MoveMessage moveMessage) {
+    public void handleMove(MoveMessage moveMessage) {
         currentBoard.movePiece(moveMessage.getFromRow(), moveMessage.getFromCol(), moveMessage.getToRow(), moveMessage.getToCol());
         //later enkel naar de 2 spelers van het spel zelf.
         broadcast(moveMessage.setSource(null));
+    }
+
+    public void handleGameStart(GameStartMessage gameStartMessage) {
+        //TODO
+    }
+
+    @Override
+    public void handleThisIsTheLobbyMessage(ThisIsTheLobbyMessage thisIsTheLobby) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
