@@ -36,6 +36,7 @@ public class ConnectionAccepterThread extends Thread {
 
     private ServerSocket providerSocket;
     private Server server;
+    private static final int PORT = 8001;
 
     public ConnectionAccepterThread(Server server) {
         this.server = server;
@@ -44,7 +45,7 @@ public class ConnectionAccepterThread extends Thread {
     @Override
     public void run() {
         try {
-            providerSocket = new ServerSocket(12345, 10);
+            providerSocket = new ServerSocket(PORT, 10);
         } catch (IOException ex) {
             Logger.getLogger(ConnectionAccepterThread.class.getName()).log(Level.SEVERE, null, ex);
             return;
