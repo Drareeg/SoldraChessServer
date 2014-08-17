@@ -27,6 +27,7 @@ import Shared.Networking.Message;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,17 +57,24 @@ public class ListenToOneClientThread extends Thread {
             return;
         }
         //als de streams goed geinit zijn -> beginnen luisteren naar de ois
-        while (true) {
+        int timesNoConnection = 0;
+        while (timesNoConnection < 50) {
             try {
                 Object incoming = ois.readObject();
+                timesNoConnection  = 0;
                 if (incoming != null) {
+                   
                     server.addMessage(((Message) incoming).setSource(connection));
                 }
             } catch (IOException ex) {
-                Logger.getLogger(ListenToOneClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                //onder andere als de connectie is weggevallen (bv door client zijn pc die ontploft)
+                System.out.println("no connection: " + timesNoConnection);
+                timesNoConnection++;
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ListenToOneClientThread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        server.clientDisconnected(connection);
+        
     }
 }

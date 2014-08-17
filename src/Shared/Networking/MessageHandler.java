@@ -38,4 +38,6 @@ public interface MessageHandler {
     public void handleGameStart(GameStartMessage gameStart);
 
     public void handleThisIsTheLobbyMessage(ThisIsTheLobbyMessage thisIsTheLobby);
+
+    public void handleLeaveLobby(LeaveLobbyMessage leaveLobby);
 }

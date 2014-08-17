@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Shared.Networking.JoinLobbyMessage;
+import Shared.Networking.LeaveLobbyMessage;
 import Shared.Networking.Message;
 import Shared.Networking.MoveMessage;
 import Shared.Networking.ThisIsTheLobbyMessage;
@@ -148,5 +149,18 @@ public class Server implements MessageHandler {
     @Override
     public void handleThisIsTheLobbyMessage(ThisIsTheLobbyMessage thisIsTheLobby) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    void clientDisconnected(Socket connection) {
+        String leaverName = this.clientUsernameMap.remove(connection);
+        this.clientOosMap.remove(connection);
+        broadcast(new LeaveLobbyMessage(leaverName));
+    }
+
+    
+    //dit moet de server niet doen, dit is nl een message dat de server vestuurd als hij ontdekt dat een client weg is
+    @Override
+    public void handleLeaveLobby(LeaveLobbyMessage leaveLobby) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
