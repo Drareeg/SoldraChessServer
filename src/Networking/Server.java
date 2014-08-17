@@ -25,6 +25,7 @@ package Networking;
 
 import Shared.Chess.Board;
 import Shared.Networking.ChallengeMessage;
+import Shared.Networking.ChatMessage;
 import Shared.Networking.GameStartMessage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -90,7 +91,6 @@ public class Server implements MessageHandler {
         }
         new ListenToOneClientThread(connection, this).start();
         clientOosMap.put(connection, oos);
-
     }
 
     public void handleJoinLobby(JoinLobbyMessage message) {
@@ -101,19 +101,14 @@ public class Server implements MessageHandler {
     }
 
     private void broadcast(Message message) {
-        System.out.println("broadcasting to " + clientOosMap.size());
-        for (ObjectOutputStream oos : clientOosMap.values()) {
-            try {
-                oos.reset();
-                oos.writeUnshared(message);
-            } catch (IOException ex) {
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        for (Socket socket : clientOosMap.keySet()) {
+            sendMessage(socket, message);
         }
-        System.out.println("broadcasting done");
     }
 
     private void sendMessage(Socket client, Message message) {
+        //als we in een andere methode (bv chat) een message die we ontvangen rechtstreeks willen broadcasten, dan moeten we daar dit niet doen
+        message.setSource(null);
         try {
             clientOosMap.get(client).reset();
             clientOosMap.get(client).writeUnshared(message);
@@ -157,10 +152,14 @@ public class Server implements MessageHandler {
         broadcast(new LeaveLobbyMessage(leaverName));
     }
 
-    
     //dit moet de server niet doen, dit is nl een message dat de server vestuurd als hij ontdekt dat een client weg is
     @Override
     public void handleLeaveLobby(LeaveLobbyMessage leaveLobby) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void handleChatMessage(ChatMessage aThis) {
+        broadcast(aThis);
     }
 }

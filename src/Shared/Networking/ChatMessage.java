@@ -22,31 +22,32 @@
  * THE SOFTWARE.
  */
 package Shared.Networking;
-import Shared.Networking.ChallengeMessage;
-import Shared.Networking.ChatMessage;
-import Shared.Networking.GameStartMessage;
-import Shared.Networking.JoinLobbyMessage;
-import Shared.Networking.LeaveLobbyMessage;
-import Shared.Networking.MoveMessage;
-import Shared.Networking.ThisIsTheLobbyMessage;
 
 /**
  *
- * @author Dries
+ * @author Geerard
  */
-public interface MessageHandler {
+public class ChatMessage extends Message {
 
-    public void handleJoinLobby(JoinLobbyMessage message);
+    private String content;
+    private String originName;
 
-    public void handleChallenge(ChallengeMessage challengeMessage);
+    public ChatMessage(String content, String originName) {
+        this.content = content;
+        this.originName = originName;
+    }
 
-    public void handleMove(MoveMessage moveMessage);
+    public String getContent() {
+        return content;
+    }
 
-    public void handleGameStart(GameStartMessage gameStart);
+    public String getOriginName() {
+        return originName;
+    }
 
-    public void handleThisIsTheLobbyMessage(ThisIsTheLobbyMessage thisIsTheLobby);
+    @Override
+    public void handleSelf(MessageHandler m) {
+        m.handleChatMessage(this);
+    }
 
-    public void handleLeaveLobby(LeaveLobbyMessage leaveLobby);
-
-    public void handleChatMessage(ChatMessage aThis);
 }

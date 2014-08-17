@@ -23,8 +23,6 @@
  */
 package Shared.Networking;
 
-import Networking.Server;
-
 /**
  * S -> C: a new game started for you
  *
