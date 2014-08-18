@@ -25,25 +25,23 @@ package Shared.Networking;
 
 /**
  *
- * @author Dries
+ * @author Geerard
  */
-public interface MessageHandler {
+public class TurnMessage extends Message {
 
-    public void handleJoinLobby(JoinLobbyMessage message);
+    private boolean myTurn;
 
-    public void handleChallenge(ChallengeMessage challengeMessage);
+    public TurnMessage(boolean myTurn) {
+        this.myTurn = myTurn;
+    }
 
-    public void handleMove(MoveMessage moveMessage);
+    public boolean isMyTurn() {
+        return myTurn;
+    }
 
-    public void handleGameStart(GameStartMessage gameStart);
+    @Override
+    public void handleSelf(MessageHandler m) {
+        m.handleTurnMessage(this);
+    }
 
-    public void handleThisIsTheLobbyMessage(ThisIsTheLobbyMessage thisIsTheLobby);
-
-    public void handleLeaveLobby(LeaveLobbyMessage leaveLobby);
-
-    public void handleChatMessage(ChatMessage aThis);
-
-    public void handleThisIsTheBoard(ThisIsTheBoardMessage aThis);
-
-    public void handleTurnMessage(TurnMessage aThis);
 }

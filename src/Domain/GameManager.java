@@ -48,7 +48,7 @@ public class GameManager {
 
     //voorlopig betekend een challenge nog dat er een spel is begonnen
     public void handleChallenge(ChallengeMessage challengeMessage) {
-        Game game = new Game(challengeMessage.getSource(), server.getSocketFromUsername(challengeMessage.getTarget()));
+        Game game = new Game(challengeMessage.getSource(), server.getSocketFromUsername(challengeMessage.getTarget()), server);
         games.add(game);
     }
 

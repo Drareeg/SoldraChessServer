@@ -22,7 +22,9 @@
  * THE SOFTWARE.
  */
 package Domain;
+import Networking.Server;
 import Shared.Chess.Board;
+import Shared.Networking.TurnMessage;
 import com.sun.javafx.collections.ImmutableObservableList;
 import java.net.Socket;
 
@@ -34,11 +36,18 @@ class Game {
     Socket player1;
     Socket player2;
     Board board;
+    Server server;
+    int turn = 0;
 
-    public Game(Socket player1, Socket player2) {
+    public Game(Socket player1, Socket player2, Server server) {
+        this.server = server;
         this.player1 = player1;
         this.player2 = player2;
+        if (player1 == player2) {
+            System.out.println("DAFUQ, da meende nu toch niet.");
+        }
         board = new Board();
+        nextTurn();
     }
 
     boolean hasPlayer(Socket source) {
@@ -46,12 +55,20 @@ class Game {
     }
 
     void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+        //nog checken of het command komt van dienen aan de beurt, en of dat een stuk is van hem
         board.movePiece(fromRow, fromCol, toRow, toCol);
+        nextTurn();
         //later variantlogica in deze klasse, en hier ook
     }
 
     Iterable<Socket> getPlayers() {
         return new ImmutableObservableList<>(player1, player2);
+    }
+
+    private void nextTurn() {
+        turn = (turn + 1) % 2;
+        server.sendMessage(player1, new TurnMessage(turn == 0));
+        server.sendMessage(player2, new TurnMessage(turn != 0));
     }
 
 }

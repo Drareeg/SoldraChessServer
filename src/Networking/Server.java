@@ -42,6 +42,7 @@ import Shared.Networking.ThisIsTheLobbyMessage;
 import java.util.concurrent.ConcurrentHashMap;
 import Shared.Networking.MessageHandler;
 import Shared.Networking.ThisIsTheBoardMessage;
+import Shared.Networking.TurnMessage;
 
 /**
  *
@@ -121,8 +122,6 @@ public class Server implements MessageHandler {
     }
 
     public void handleChallenge(ChallengeMessage challengeMessage) {
-        gameManager.handleChallenge(challengeMessage);
-        //voorlopig efkes gwn 1 spel tegelijkertijd, later meerdere en uitzoeken bij welke de movemessages horen.
         GameStartMessage message = new GameStartMessage();
         sendMessage(challengeMessage.getSource(), message);
         for (Socket client : clientUsernameMap.keySet()) {
@@ -130,6 +129,7 @@ public class Server implements MessageHandler {
                 sendMessage(client, message);
             }
         }
+        gameManager.handleChallenge(challengeMessage);
     }
 
     public void handleMove(MoveMessage moveMessage) {
@@ -174,5 +174,10 @@ public class Server implements MessageHandler {
             }
         }
         return null;
+    }
+
+    @Override
+    public void handleTurnMessage(TurnMessage aThis) {
+        throw new UnsupportedOperationException("enkel voor client."); //To change body of generated methods, choose Tools | Templates.
     }
 }
