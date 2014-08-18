@@ -1,5 +1,3 @@
-package Shared.Networking;
-
 /*
  * The MIT License
  *
@@ -23,27 +21,28 @@ package Shared.Networking;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import java.io.Serializable;
-import java.net.Socket;
+package Shared.Networking;
+import Shared.Chess.Board;
 
 /**
  *
  * @author Geerard
  */
-public abstract class Message implements Serializable {
+public class ThisIsTheBoardMessage extends Message {
 
-    private Socket source;
+    private Board board;
 
-    //This is done when a message is received.
-    //You don't have to bother setting source when sending a message.
-    public Message setSource(Socket source) {
-        this.source = source;
-        return this;
+    public ThisIsTheBoardMessage(Board currentBoard) {
+        this.board = currentBoard;
     }
 
-    public Socket getSource() {
-        return source;
+    @Override
+    public void handleSelf(MessageHandler m) {
+        m.handleThisIsTheBoard(this);
     }
 
-    public abstract void handleSelf(MessageHandler m);
+    public Board getBoard() {
+        return board;
+    }
+
 }

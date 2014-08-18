@@ -1,5 +1,3 @@
-package Shared.Networking;
-
 /*
  * The MIT License
  *
@@ -23,27 +21,37 @@ package Shared.Networking;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import java.io.Serializable;
+package Domain;
+import Shared.Chess.Board;
+import com.sun.javafx.collections.ImmutableObservableList;
 import java.net.Socket;
 
 /**
  *
  * @author Geerard
  */
-public abstract class Message implements Serializable {
+class Game {
+    Socket player1;
+    Socket player2;
+    Board board;
 
-    private Socket source;
-
-    //This is done when a message is received.
-    //You don't have to bother setting source when sending a message.
-    public Message setSource(Socket source) {
-        this.source = source;
-        return this;
+    public Game(Socket player1, Socket player2) {
+        this.player1 = player1;
+        this.player2 = player2;
+        board = new Board();
     }
 
-    public Socket getSource() {
-        return source;
+    boolean hasPlayer(Socket source) {
+        return player1 == source || player2 == source;
     }
 
-    public abstract void handleSelf(MessageHandler m);
+    void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+        board.movePiece(fromRow, fromCol, toRow, toCol);
+        //later variantlogica in deze klasse, en hier ook
+    }
+
+    Iterable<Socket> getPlayers() {
+        return new ImmutableObservableList<>(player1, player2);
+    }
+
 }

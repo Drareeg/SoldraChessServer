@@ -23,7 +23,7 @@
  */
 package Networking;
 
-import Shared.Chess.Board;
+import Domain.GameManager;
 import Shared.Networking.ChallengeMessage;
 import Shared.Networking.ChatMessage;
 import Shared.Networking.GameStartMessage;
@@ -41,6 +41,7 @@ import Shared.Networking.MoveMessage;
 import Shared.Networking.ThisIsTheLobbyMessage;
 import java.util.concurrent.ConcurrentHashMap;
 import Shared.Networking.MessageHandler;
+import Shared.Networking.ThisIsTheBoardMessage;
 
 /**
  *
@@ -52,13 +53,15 @@ public class Server implements MessageHandler {
     private ConcurrentHashMap<Socket, String> clientUsernameMap;
     //incoming messages from all clients
     private LinkedBlockingQueue<Message> messageQueue;
+    private GameManager gameManager;
 
     public Server() {
         clientOosMap = new ConcurrentHashMap<>();
         clientUsernameMap = new ConcurrentHashMap<>();
-        System.out.println("Beep Boop: server is running");
+        gameManager = new GameManager(this);
         //start nieuwe ListenToOneClientThread per connectie die hij binnen krijgt.
         new ConnectionAccepterThread(this).start();
+        System.out.println("Beep Boop: server is running");
         messageQueue = new LinkedBlockingQueue<Message>();
         handleIncomingMessages();
     }
@@ -106,7 +109,7 @@ public class Server implements MessageHandler {
         }
     }
 
-    private void sendMessage(Socket client, Message message) {
+    public void sendMessage(Socket client, Message message) {
         //als we in een andere methode (bv chat) een message die we ontvangen rechtstreeks willen broadcasten, dan moeten we daar dit niet doen
         message.setSource(null);
         try {
@@ -117,11 +120,9 @@ public class Server implements MessageHandler {
         }
     }
 
-    private Board currentBoard;
-
     public void handleChallenge(ChallengeMessage challengeMessage) {
+        gameManager.handleChallenge(challengeMessage);
         //voorlopig efkes gwn 1 spel tegelijkertijd, later meerdere en uitzoeken bij welke de movemessages horen.
-        currentBoard = new Board();
         GameStartMessage message = new GameStartMessage();
         sendMessage(challengeMessage.getSource(), message);
         for (Socket client : clientUsernameMap.keySet()) {
@@ -132,9 +133,7 @@ public class Server implements MessageHandler {
     }
 
     public void handleMove(MoveMessage moveMessage) {
-        currentBoard.movePiece(moveMessage.getFromRow(), moveMessage.getFromCol(), moveMessage.getToRow(), moveMessage.getToCol());
-        //later enkel naar de 2 spelers van het spel zelf.
-        broadcast(moveMessage.setSource(null));
+        gameManager.handleMove(moveMessage);
     }
 
     public void handleGameStart(GameStartMessage gameStartMessage) {
@@ -161,5 +160,19 @@ public class Server implements MessageHandler {
     @Override
     public void handleChatMessage(ChatMessage aThis) {
         broadcast(aThis);
+    }
+
+    @Override
+    public void handleThisIsTheBoard(ThisIsTheBoardMessage aThis) {
+        throw new UnsupportedOperationException("Enkel server verstuurd dit."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Socket getSocketFromUsername(String target) {
+        for (Socket client : clientUsernameMap.keySet()) {
+            if (clientUsernameMap.get(client).equals(target)) {
+                return client;
+            }
+        }
+        return null;
     }
 }

@@ -1,7 +1,5 @@
 package Shared.Networking;
 
-import Networking.Server;
-
 /*
  * The MIT License
  *

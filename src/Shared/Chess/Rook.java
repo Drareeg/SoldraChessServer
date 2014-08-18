@@ -29,7 +29,7 @@ package Shared.Chess;
  */
 public class Rook extends ChessPiece {
 
-    public Rook() {
-        super("r");
+    public Rook(boolean isWhite) {
+        super(isWhite);
     }
 }

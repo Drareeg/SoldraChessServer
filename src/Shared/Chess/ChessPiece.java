@@ -21,20 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package Shared.Chess;
+import java.io.Serializable;
 
 /**
  *
  * @author Drareeg
  */
-public abstract class ChessPiece {
+public abstract class ChessPiece implements Serializable {
     //tijdelijke representatie van een stuk is een letter.
-    public String code;
+    public boolean isWhite;
 
-    public ChessPiece(String code) {
-        this.code = code;
+    public ChessPiece(boolean isWhite) {
+        this.isWhite = isWhite;
     }
-    
-    
+
+    public boolean isWhite() {
+        return isWhite;
+    }
+
 }

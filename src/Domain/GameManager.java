@@ -1,5 +1,3 @@
-package Shared.Networking;
-
 /*
  * The MIT License
  *
@@ -23,27 +21,45 @@ package Shared.Networking;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import java.io.Serializable;
+package Domain;
+import Networking.Server;
+import Shared.Networking.ChallengeMessage;
+import Shared.Networking.MoveMessage;
+import Shared.Networking.ThisIsTheBoardMessage;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Geerard
  */
-public abstract class Message implements Serializable {
+public class GameManager {
 
-    private Socket source;
+    //om messages te versturen
+    private Server server;
 
-    //This is done when a message is received.
-    //You don't have to bother setting source when sending a message.
-    public Message setSource(Socket source) {
-        this.source = source;
-        return this;
+    private List<Game> games;
+
+    public GameManager(Server server) {
+        this.server = server;
+        games = new ArrayList<>();
     }
 
-    public Socket getSource() {
-        return source;
+    //voorlopig betekend een challenge nog dat er een spel is begonnen
+    public void handleChallenge(ChallengeMessage challengeMessage) {
+        Game game = new Game(challengeMessage.getSource(), server.getSocketFromUsername(challengeMessage.getTarget()));
+        games.add(game);
     }
 
-    public abstract void handleSelf(MessageHandler m);
+    public void handleMove(MoveMessage moveMessage) {
+        for (Game game : games) {
+            if (game.hasPlayer(moveMessage.getSource())) {
+                game.movePiece(moveMessage.getFromRow(), moveMessage.getFromCol(), moveMessage.getToRow(), moveMessage.getToCol());
+                for (Socket s : game.getPlayers()) {
+                    server.sendMessage(s, new ThisIsTheBoardMessage(game.board));
+                }
+            }
+        }
+    }
 }

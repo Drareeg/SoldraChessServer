@@ -23,10 +23,8 @@
  */
 package Shared.Networking;
 
-import Networking.Server;
-
 /**
- * C -> S: I do this move S -> C: this move was done
+ * C -> S: I do this move S -> C: niet doen, voorlopig met thisIsTheBoard
  *
  * @author Drareeg
  */

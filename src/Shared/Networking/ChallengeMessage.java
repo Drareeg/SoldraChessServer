@@ -23,8 +23,6 @@
  */
 package Shared.Networking;
 
-import Networking.Server;
-
 /**
  * C -> S: I challenge player target
  *

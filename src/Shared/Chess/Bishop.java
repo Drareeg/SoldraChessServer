@@ -1,9 +1,7 @@
-package Shared.Networking;
-
 /*
  * The MIT License
  *
- * Copyright 2014 Dries Weyme & Geerard Ponnet.
+ * Copyright 2014 Drareeg.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,27 +21,15 @@ package Shared.Networking;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import java.io.Serializable;
-import java.net.Socket;
+package Shared.Chess;
 
 /**
  *
- * @author Geerard
+ * @author Drareeg
  */
-public abstract class Message implements Serializable {
+public class Bishop extends ChessPiece {
 
-    private Socket source;
-
-    //This is done when a message is received.
-    //You don't have to bother setting source when sending a message.
-    public Message setSource(Socket source) {
-        this.source = source;
-        return this;
+    public Bishop(boolean isWhite) {
+        super(isWhite);
     }
-
-    public Socket getSource() {
-        return source;
-    }
-
-    public abstract void handleSelf(MessageHandler m);
 }
