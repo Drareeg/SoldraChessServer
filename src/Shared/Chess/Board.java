@@ -105,4 +105,8 @@ public class Board implements Serializable {
         this.model = board.model;
         fireChanged();
     }
+
+    public boolean isMoveAllowed(int fromRow, int fromCol, int toRow, int toCol) {
+        return model[fromRow][fromCol].canMoveFromTo(fromRow, fromCol, toRow, toCol, this);
+    }
 }

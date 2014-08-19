@@ -40,4 +40,6 @@ public abstract class ChessPiece implements Serializable {
         return isWhite;
     }
 
+    abstract boolean canMoveFromTo(int fromRow, int fromCol, int toRow, int toCol, Board aThis) ;
+
 }

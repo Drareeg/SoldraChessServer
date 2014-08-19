@@ -32,4 +32,9 @@ public class King extends ChessPiece {
     public King(boolean isWhite) {
         super(isWhite);
     }
+
+    @Override
+    boolean canMoveFromTo(int fromRow, int fromCol, int toRow, int toCol, Board aThis) {
+        return Math.abs(fromRow - toRow) < 2 && Math.abs(fromCol - toCol) < 2;
+    }
 }

@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  */
 package Domain;
+
 import Networking.Server;
 import Shared.Chess.Board;
 import Shared.Networking.TurnMessage;
@@ -33,6 +34,7 @@ import java.net.Socket;
  * @author Geerard
  */
 class Game {
+
     Socket player1;
     Socket player2;
     Board board;
@@ -56,8 +58,10 @@ class Game {
 
     void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
         //nog checken of het command komt van dienen aan de beurt, en of dat een stuk is van hem
-        board.movePiece(fromRow, fromCol, toRow, toCol);
-        nextTurn();
+        if (board.isMoveAllowed(fromRow, fromCol, toRow, toCol)) {
+            board.movePiece(fromRow, fromCol, toRow, toCol);
+            nextTurn();
+        }
         //later variantlogica in deze klasse, en hier ook
     }
 

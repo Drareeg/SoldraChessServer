@@ -32,4 +32,13 @@ public class Pawn extends ChessPiece {
     public Pawn(boolean isWhite) {
         super(isWhite);
     }
+
+    @Override
+    boolean canMoveFromTo(int fromRow, int fromCol, int toRow, int toCol, Board aThis) {
+        if(isWhite){
+            return fromRow == toRow +1;
+        }else{
+            return fromRow == toRow -1;
+        }
+    }
 }

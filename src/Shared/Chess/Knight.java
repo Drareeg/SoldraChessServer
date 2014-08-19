@@ -32,4 +32,11 @@ public class Knight extends ChessPiece {
     public Knight(boolean isWhite) {
         super(isWhite);
     }
+
+    @Override
+    boolean canMoveFromTo(int fromRow, int fromCol, int toRow, int toCol, Board aThis) {
+        int rowDiff = Math.abs(fromRow - toRow);
+        int colDiff = Math.abs(fromCol - toCol);
+        return (rowDiff == 1 && colDiff == 2) || (rowDiff == 2 && colDiff == 1 );
+    }
 }

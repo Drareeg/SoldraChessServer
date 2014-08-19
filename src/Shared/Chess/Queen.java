@@ -32,4 +32,9 @@ public class Queen extends ChessPiece {
     public Queen(boolean isWhite) {
         super(isWhite);
     }
+
+    @Override
+    boolean canMoveFromTo(int fromRow, int fromCol, int toRow, int toCol, Board aThis) {
+        return true;
+    }
 }

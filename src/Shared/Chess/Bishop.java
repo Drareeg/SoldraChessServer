@@ -32,4 +32,14 @@ public class Bishop extends ChessPiece {
     public Bishop(boolean isWhite) {
         super(isWhite);
     }
+
+    @Override
+    boolean canMoveFromTo(int fromRow, int fromCol, int toRow, int toCol, Board aThis) {
+        //als het diagonaal is
+        if(Math.abs(fromRow - toRow) == Math.abs(fromCol - toCol) ){
+            //nu nog kijken of er geen stukken in de weg staan
+            return true;
+        }
+        return false;
+    }
 }

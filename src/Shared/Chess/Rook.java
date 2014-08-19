@@ -32,4 +32,11 @@ public class Rook extends ChessPiece {
     public Rook(boolean isWhite) {
         super(isWhite);
     }
+
+    @Override
+    boolean canMoveFromTo(int fromRow, int fromCol, int toRow, int toCol, Board aThis) {
+        int rowDiff = Math.abs(fromRow - toRow);
+        int colDiff = Math.abs(fromCol - toCol);
+        return rowDiff == 0 || colDiff == 0;
+    }
 }
