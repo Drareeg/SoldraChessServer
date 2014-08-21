@@ -21,32 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Chess;
-import java.util.ArrayList;
-import java.util.List;
+package Shared.Networking;
+import Shared.Other.Challenge;
 
 /**
+ * C -> S: I accept challenge
  *
  * @author Drareeg
  */
-public class Rook extends ChessPiece {
+public class AcceptChallengeMessage extends Message {
 
-    public Rook(boolean isWhite) {
-        super(isWhite);
-        List<Coordinate> list1 = new ArrayList<>();
-        List<Coordinate> list2 = new ArrayList<>();
-        List<Coordinate> list3 = new ArrayList<>();
-        List<Coordinate> list4 = new ArrayList<>();
-        for (int i = 1; i < 8; i++) {
-            list1.add(new Coordinate(1 * i, 0));
-            list2.add(new Coordinate(-1 * i, 0));
-            list3.add(new Coordinate(0, -1 * i));
-            list4.add(new Coordinate(0, 1 * i));
-        }
-        possibleMovesListList.add(list1);
-        possibleMovesListList.add(list2);
-        possibleMovesListList.add(list3);
-        possibleMovesListList.add(list4);
+    private Challenge challenge;
+
+    public AcceptChallengeMessage(Challenge challenge) {
+        this.challenge = challenge;
+    }
+
+    public Challenge getChallenge() {
+        return challenge;
+    }
+
+    @Override
+    public void handleSelf(MessageHandler m) {
+        m.handleAcceptChallenge(this);
     }
 
 }

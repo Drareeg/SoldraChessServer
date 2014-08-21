@@ -29,7 +29,6 @@ package Shared.Chess;
  */
 public class Pawn extends ChessPiece {
 
-    boolean hasMoved = false;
     private Coordinate forward;
     private Coordinate twoForward;
     private Coordinate leftFront; //left is niet per se left voor de pion zelf.

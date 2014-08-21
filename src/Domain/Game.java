@@ -52,6 +52,9 @@ class Game {
             System.out.println("DAFUQ, da meende nu toch niet.");
         }
         board = new Board();
+    }
+
+    public void start() {
         nextTurn();
     }
 

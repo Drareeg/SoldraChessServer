@@ -33,6 +33,7 @@ import java.util.List;
 public abstract class ChessPiece implements Serializable {
     //tijdelijke representatie van een stuk is een letter.
     public boolean isWhite;
+    public boolean hasMoved;
     public List<List<Coordinate>> possibleMovesListList;
 
     public ChessPiece(boolean isWhite) {

@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  */
 package Shared.Networking;
+import Shared.Other.Challenge;
 
 /**
  * C -> S: I challenge player target
@@ -32,13 +33,19 @@ public class ChallengeMessage extends Message {
 
     //the person being challenged
     private String target;
+    private Challenge challenge;
 
-    public ChallengeMessage(String target) {
+    public ChallengeMessage(String target, Challenge challenge) {
         this.target = target;
+        this.challenge = challenge;
     }
 
     public String getTarget() {
         return target;
+    }
+
+    public Challenge getChallenge() {
+        return challenge;
     }
 
     @Override

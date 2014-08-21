@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Drareeg.
+ * Copyright 2014 Dries Weyme & Geerard Ponnet.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,32 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Chess;
-import java.util.ArrayList;
-import java.util.List;
+package Shared.Other;
+import java.io.Serializable;
 
 /**
  *
- * @author Drareeg
+ * @author Geerard
  */
-public class Rook extends ChessPiece {
+public class Challenge implements Serializable {
 
-    public Rook(boolean isWhite) {
-        super(isWhite);
-        List<Coordinate> list1 = new ArrayList<>();
-        List<Coordinate> list2 = new ArrayList<>();
-        List<Coordinate> list3 = new ArrayList<>();
-        List<Coordinate> list4 = new ArrayList<>();
-        for (int i = 1; i < 8; i++) {
-            list1.add(new Coordinate(1 * i, 0));
-            list2.add(new Coordinate(-1 * i, 0));
-            list3.add(new Coordinate(0, -1 * i));
-            list4.add(new Coordinate(0, 1 * i));
-        }
-        possibleMovesListList.add(list1);
-        possibleMovesListList.add(list2);
-        possibleMovesListList.add(list3);
-        possibleMovesListList.add(list4);
+    //met enums ofzo later
+    private int variant;
+    private String origin;
+
+    public Challenge(int variant, String origin) {
+        this.variant = variant;
+        this.origin = origin;
+    }
+
+    public int getVariant() {
+        return variant;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    @Override
+    public String toString() {
+        return origin + " wants to play " + variant;
     }
 
 }

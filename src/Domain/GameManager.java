@@ -23,7 +23,9 @@
  */
 package Domain;
 import Networking.Server;
+import Shared.Networking.AcceptChallengeMessage;
 import Shared.Networking.ChallengeMessage;
+import Shared.Networking.GameStartMessage;
 import Shared.Networking.MoveMessage;
 import Shared.Networking.ThisIsTheBoardMessage;
 import java.net.Socket;
@@ -46,12 +48,6 @@ public class GameManager {
         games = new ArrayList<>();
     }
 
-    //voorlopig betekend een challenge nog dat er een spel is begonnen
-    public void handleChallenge(ChallengeMessage challengeMessage) {
-        Game game = new Game(challengeMessage.getSource(), server.getSocketFromUsername(challengeMessage.getTarget()), server);
-        games.add(game);
-    }
-
     public void handleMove(MoveMessage moveMessage) {
         for (Game game : games) {
             if (game.hasPlayer(moveMessage.getSource())) {
@@ -61,5 +57,21 @@ public class GameManager {
                 }
             }
         }
+    }
+
+    public void handleChallengeAccepted(AcceptChallengeMessage aThis) {
+        //controlleer of challenger nog geen spel bezig is
+        //maak spel aan en laat beiden weten over het spel
+        Socket p1 = aThis.getSource();
+        Socket p2 = server.getSocketFromUsername(aThis.getChallenge().getOrigin());
+        if (p2 == null) {
+            System.out.println("couldnt find socket for username " + aThis.getChallenge().getOrigin());
+        }
+        Game game = new Game(p1, p2, server);
+        games.add(game);
+        GameStartMessage gameStartMessage = new GameStartMessage();
+        server.sendMessage(p1, gameStartMessage);
+        server.sendMessage(p2, gameStartMessage);
+        game.start();
     }
 }

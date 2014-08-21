@@ -24,6 +24,7 @@
 package Networking;
 
 import Domain.GameManager;
+import Shared.Networking.AcceptChallengeMessage;
 import Shared.Networking.ChallengeMessage;
 import Shared.Networking.ChatMessage;
 import Shared.Networking.GameStartMessage;
@@ -122,14 +123,14 @@ public class Server implements MessageHandler {
     }
 
     public void handleChallenge(ChallengeMessage challengeMessage) {
-        GameStartMessage message = new GameStartMessage();
-        sendMessage(challengeMessage.getSource(), message);
+        // GameStartMessage message = new GameStartMessage();
+        // sendMessage(challengeMessage.getSource(), message);
         for (Socket client : clientUsernameMap.keySet()) {
             if (clientUsernameMap.get(client).equals(challengeMessage.getTarget())) {
-                sendMessage(client, message);
+                sendMessage(client, challengeMessage.setSource(null));
             }
         }
-        gameManager.handleChallenge(challengeMessage);
+        // gameManager.handleChallenge(challengeMessage);
     }
 
     public void handleMove(MoveMessage moveMessage) {
@@ -179,5 +180,10 @@ public class Server implements MessageHandler {
     @Override
     public void handleTurnMessage(TurnMessage aThis) {
         throw new UnsupportedOperationException("enkel voor client."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void handleAcceptChallenge(AcceptChallengeMessage aThis) {
+        gameManager.handleChallengeAccepted(aThis);
     }
 }

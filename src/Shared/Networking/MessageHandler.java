@@ -46,4 +46,6 @@ public interface MessageHandler {
     public void handleThisIsTheBoard(ThisIsTheBoardMessage aThis);
 
     public void handleTurnMessage(TurnMessage aThis);
+
+    public void handleAcceptChallenge(AcceptChallengeMessage aThis);
 }
