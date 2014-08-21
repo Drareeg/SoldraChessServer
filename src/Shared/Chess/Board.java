@@ -56,19 +56,19 @@ public class Board implements Serializable {
         }
     }
 
-    public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+    public void movePiece(Coordinate fromCoord, Coordinate toCoord) {
+        int fromRow = fromCoord.getRow();
+        int fromCol = fromCoord.getCol();
+        int toRow = toCoord.getRow();
+        int toCol = toCoord.getCol();
         model[toRow][toCol] = model[fromRow][fromCol];
         model[fromRow][fromCol] = null;
         //magneetschaak
-        attract(toRow, toCol, 1, 0);
-        attract(toRow, toCol, -1, 0);
-        attract(toRow, toCol, 0, 1);
-        attract(toRow, toCol, 0, -1);
+        attract(toCoord, 1, 0);
+        attract(toCoord, -1, 0);
+        attract(toCoord, 0, 1);
+        attract(toCoord, 0, -1);
         fireChanged();
-    }
-
-    public ChessPiece getPiece(int row, int col) {
-        return model[row][col];
     }
 
     BoardChangeListener bcl;
@@ -83,7 +83,9 @@ public class Board implements Serializable {
         this.bcl = aThis;
     }
 
-    private void attract(int row, int col, int rdiff, int cdiff) {
+    private void attract(Coordinate origin, int rdiff, int cdiff) {
+        int row = origin.getRow();
+        int col = origin.getCol();
         int testR = row;
         int testC = col;
         boolean done = false;
@@ -104,5 +106,22 @@ public class Board implements Serializable {
     public void updateTo(Board board) {
         this.model = board.model;
         fireChanged();
+    }
+
+    public boolean isMoveAllowed(Coordinate fromCoord, Coordinate toCoord) {
+        return model[fromCoord.getRow()][fromCoord.getCol()].canMoveFromTo(fromCoord, toCoord, this);
+    }
+
+    boolean containsCoordinate(Coordinate coord) {
+        return coord.getRow() >= 0 && coord.getRow() <= 7
+                && coord.getCol() >= 0 && coord.getCol() <= 7;
+    }
+
+    boolean hasPiece(Coordinate coord) {
+        return model[coord.getRow()][coord.getCol()] != null;
+    }
+
+    public ChessPiece getPiece(Coordinate coord) {
+        return model[coord.getRow()][coord.getCol()];
     }
 }

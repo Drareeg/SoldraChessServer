@@ -24,6 +24,7 @@
 package Domain;
 import Networking.Server;
 import Shared.Chess.Board;
+import Shared.Chess.Coordinate;
 import Shared.Networking.TurnMessage;
 import com.sun.javafx.collections.ImmutableObservableList;
 import java.net.Socket;
@@ -39,6 +40,8 @@ class Game {
     Server server;
     int turn = 0;
 
+    //idee dat ergens moet staan, vast niet hier. hopelijk lees ik het nog eens
+    //ipv bij promotie auto dame/laten kiezen, tijdens de match in de GUI reeds kunnen aanduiden wat de volgende promotie moet zijn.
     public Game(Socket player1, Socket player2, Server server) {
         this.server = server;
         this.player1 = player1;
@@ -54,10 +57,12 @@ class Game {
         return player1 == source || player2 == source;
     }
 
-    void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+    void movePiece(Coordinate fromCoord, Coordinate toCoord) {
         //nog checken of het command komt van dienen aan de beurt, en of dat een stuk is van hem
-        board.movePiece(fromRow, fromCol, toRow, toCol);
-        nextTurn();
+        if (board.isMoveAllowed(fromCoord, toCoord)) {
+            board.movePiece(fromCoord, toCoord);
+            nextTurn();
+        }
         //later variantlogica in deze klasse, en hier ook
     }
 

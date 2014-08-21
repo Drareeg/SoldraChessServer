@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Drareeg.
+ * Copyright 2014 Dries Weyme & Geerard Ponnet.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,36 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Networking;
-import Shared.Chess.Coordinate;
+package Shared.Chess;
+import javafx.util.Pair;
 
 /**
- * C -> S: I do this move S -> C: niet doen, voorlopig met thisIsTheBoard
  *
- * @author Drareeg
+ * @author Geerard
  */
-public class MoveMessage extends Message {
+public class Coordinate extends Pair<Integer, Integer> {
 
-    //best ook bevatten wie hij doet, zodat server reply niet geinterpreteerd kan worden als nieuwe zet
-    private Coordinate fromCoord;
-    private Coordinate toCoord;
-
-    public MoveMessage(Coordinate fromCoord, Coordinate toCoord) {
-        this.fromCoord = fromCoord;
-        this.toCoord = toCoord;
+    public int getRow() {
+        return getKey();
     }
 
-    public Coordinate getFromCoord() {
-        return fromCoord;
+    public int getCol() {
+        return getValue();
     }
 
-    public Coordinate getToCoord() {
-        return toCoord;
+    public Coordinate(Integer row, Integer col) {
+        super(row, col);
     }
 
-    @Override
-    public void handleSelf(MessageHandler m) {
-        m.handleMove(this);
+    Coordinate add(Coordinate fromCoord) {
+        return new Coordinate(getKey() + fromCoord.getKey(), getValue() + fromCoord.getValue());
     }
 
 }

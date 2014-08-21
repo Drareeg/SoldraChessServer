@@ -22,6 +22,8 @@
  * THE SOFTWARE.
  */
 package Shared.Chess;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -31,5 +33,30 @@ public class King extends ChessPiece {
 
     public King(boolean isWhite) {
         super(isWhite);
+        List<Coordinate> list1 = new ArrayList<>();
+        List<Coordinate> list2 = new ArrayList<>();
+        List<Coordinate> list3 = new ArrayList<>();
+        List<Coordinate> list4 = new ArrayList<>();
+        List<Coordinate> list5 = new ArrayList<>();
+        List<Coordinate> list6 = new ArrayList<>();
+        List<Coordinate> list7 = new ArrayList<>();
+        List<Coordinate> list8 = new ArrayList<>();
+        list1.add(new Coordinate(0, 1));
+        list2.add(new Coordinate(0, -1));
+        list3.add(new Coordinate(1, -1));
+        list4.add(new Coordinate(1, 0));
+        list5.add(new Coordinate(1, 1));
+        list6.add(new Coordinate(-1, -1));
+        list7.add(new Coordinate(-1, 0));
+        list8.add(new Coordinate(-1, 1));
+        possibleMovesListList.add(list1);
+        possibleMovesListList.add(list2);
+        possibleMovesListList.add(list3);
+        possibleMovesListList.add(list4);
+        possibleMovesListList.add(list5);
+        possibleMovesListList.add(list6);
+        possibleMovesListList.add(list7);
+        possibleMovesListList.add(list8);
     }
+
 }

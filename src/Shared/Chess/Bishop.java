@@ -22,6 +22,8 @@
  * THE SOFTWARE.
  */
 package Shared.Chess;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -29,7 +31,27 @@ package Shared.Chess;
  */
 public class Bishop extends ChessPiece {
 
+    //manier van werken: (potentieel tijdelijk)
+    //Lijst hebben van lijsten verkenvolgordes. bv bij een loper: een lijst met lijsten van coordinaten naar linksonder/rechtsboven/...
+    //dan per lijst kijken tot waar de lijst legaal is en kijken of de voorgestelde zet ertussen zit
+    //dus: "de zetten zoeken waar hij heen kan, en kijken of die er tussen zit"
+    //dat is wss wat meer werk dan "controleren of de werk geldig is", maar verwaarloosbaar verlies (hoop ik)
     public Bishop(boolean isWhite) {
         super(isWhite);
+        List<Coordinate> list1 = new ArrayList<>();
+        List<Coordinate> list2 = new ArrayList<>();
+        List<Coordinate> list3 = new ArrayList<>();
+        List<Coordinate> list4 = new ArrayList<>();
+        for (int i = 1; i < 8; i++) {
+            list1.add(new Coordinate(1 * i, 1 * i));
+            list2.add(new Coordinate(-1 * i, 1 * i));
+            list3.add(new Coordinate(1 * i, -1 * i));
+            list4.add(new Coordinate(-1 * i, -1 * i));
+        }
+        possibleMovesListList.add(list1);
+        possibleMovesListList.add(list2);
+        possibleMovesListList.add(list3);
+        possibleMovesListList.add(list4);
     }
+
 }

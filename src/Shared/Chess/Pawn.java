@@ -29,7 +29,56 @@ package Shared.Chess;
  */
 public class Pawn extends ChessPiece {
 
+    boolean hasMoved = false;
+    private Coordinate forward;
+    private Coordinate twoForward;
+    private Coordinate leftFront; //left is niet per se left voor de pion zelf.
+    private Coordinate rightFront;//zelfde als hierboven
+
     public Pawn(boolean isWhite) {
         super(isWhite);
+        int direction = isWhite ? -1 : 1;
+        forward = new Coordinate(direction, 0);
+        twoForward = new Coordinate(direction * 2, 0);
+        leftFront = new Coordinate(direction, 1);
+        rightFront = new Coordinate(direction, -1);
     }
+
+    @Override
+    boolean canMoveFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
+        //vakje ervoor & leeg
+        Coordinate testCoord = fromCoord.add(forward);
+        boolean vakErvoorLeeg = !board.hasPiece(testCoord);
+        if (toCoord.equals(testCoord) && vakErvoorLeeg) {
+            return true;
+        }
+        //niet begwogen & 2 vakken ervoor
+        testCoord = fromCoord.add(twoForward);
+        if (board.containsCoordinate(testCoord)) {
+            boolean tweeVakkenErvoorLeeg = !board.hasPiece(testCoord);
+            if (!hasMoved && toCoord.equals(testCoord) && vakErvoorLeeg && tweeVakkenErvoorLeeg) {
+                return true;
+            }
+        }
+        //linkservoor && daar staat enemy
+        testCoord = fromCoord.add(leftFront);
+        if (board.containsCoordinate(testCoord)) {
+            ChessPiece takePiece = board.getPiece(testCoord); //het stuk dat het potentieen kan pakken
+            if (toCoord.equals(testCoord) && takePiece != null && !takePiece.isSameColor(this)) {
+                return true;
+            }
+        }
+        //rechtservoor && daar staat enemy
+        if (board.containsCoordinate(testCoord)) {
+            testCoord = fromCoord.add(rightFront);
+            ChessPiece takePiece = board.getPiece(testCoord); //het stuk dat het potentieen kan pakken
+            if (toCoord.equals(testCoord) && takePiece != null && !takePiece.isSameColor(this)) {
+                return true;
+            }
+        }
+        //iets met en passant (als je met een pion 2 vooruit speel ergens voor 1 beurt bijhouden welke pionen u hoe mogen en passanten)
+        //wss: op moment daje met nen pion 2 vakken vooruit knalt instellen bij de 2 potentiele pionen ernaast dat ze mogen en passanten op veld X en enkel beurt zelf
+        return false;
+    }
+
 }
