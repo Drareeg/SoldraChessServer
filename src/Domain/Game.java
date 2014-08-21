@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  */
 package Domain;
+
 import Networking.Server;
 import Shared.Chess.Board;
 import Shared.Chess.Coordinate;
@@ -34,6 +35,7 @@ import java.net.Socket;
  * @author Geerard
  */
 class Game {
+
     Socket player1;
     Socket player2;
     Board board;

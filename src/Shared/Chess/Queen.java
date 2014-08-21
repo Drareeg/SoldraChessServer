@@ -60,4 +60,9 @@ public class Queen extends ChessPiece {
         possibleMovesListList.add(list7);
         possibleMovesListList.add(list8);
     }
+
+    @Override
+    boolean canMoveFromTo(int fromRow, int fromCol, int toRow, int toCol, Board aThis) {
+        return true;
+    }
 }
