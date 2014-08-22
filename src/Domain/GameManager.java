@@ -68,8 +68,8 @@ public class GameManager {
         }
         Game game = new Game(p1, p2, server);
         games.add(game);
-        server.sendMessage(p1, new GameStartMessage(false)); //wit
-        server.sendMessage(p2, new GameStartMessage(true)); //zwart
+        server.sendMessage(p1, new GameStartMessage(false, server.getUserNameFromSocket(p2))); //wit
+        server.sendMessage(p2, new GameStartMessage(true, aThis.getChallenge().getOrigin())); //zwart
         game.start();
     }
 }

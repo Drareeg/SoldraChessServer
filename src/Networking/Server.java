@@ -186,4 +186,8 @@ public class Server implements MessageHandler {
     public void handleAcceptChallenge(AcceptChallengeMessage aThis) {
         gameManager.handleChallengeAccepted(aThis);
     }
+
+    public String getUserNameFromSocket(Socket socket) {
+        return clientUsernameMap.get(socket);
+    }
 }

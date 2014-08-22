@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Drareeg.
+ * Copyright 2014 Dries Weyme & Geerard Ponnet.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,34 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Networking;
+package Shared.Other;
 
 /**
- * S -> C: a new game started for you
  *
- * @author Drareeg
+ * @author Geerard
  */
-public class GameStartMessage extends Message {
+public class Player {
 
-    boolean amIWhite;
-    String againstName;
+    private String username;
 
-    public GameStartMessage(boolean amIWhite, String againstName) {
-        this.amIWhite = amIWhite;
-        this.againstName = againstName;
+    public Player(String username) {
+        this.username = username;
     }
 
-    public boolean AmIWhite() {
-        return amIWhite;
-    }
-
-    public String getAgainstName() {
-        return againstName;
-    }
-
-    @Override
-    public void handleSelf(MessageHandler m) {
-        m.handleGameStart(this);
+    public String getUsername() {
+        return username;
     }
 
 }
