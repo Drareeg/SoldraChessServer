@@ -49,7 +49,7 @@ public class Queen extends ChessPiece {
             list5.add(new Coordinate(1 * i, 0));
             list6.add(new Coordinate(-1 * i, 0));
             list7.add(new Coordinate(0, -1 * i));
-            list8.add(new Coordinate(0, -1 * i));
+            list8.add(new Coordinate(0, 1 * i));
         }
         possibleMovesListList.add(list1);
         possibleMovesListList.add(list2);

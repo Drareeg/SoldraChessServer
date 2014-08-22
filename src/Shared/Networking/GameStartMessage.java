@@ -30,6 +30,16 @@ package Shared.Networking;
  */
 public class GameStartMessage extends Message {
 
+    boolean amIWhite; //
+
+    public GameStartMessage(boolean amIWhite) {
+        this.amIWhite = amIWhite;
+    }
+
+    public boolean AmIWhite() {
+        return amIWhite;
+    }
+
     @Override
     public void handleSelf(MessageHandler m) {
         m.handleGameStart(this);

@@ -36,7 +36,7 @@ public class ConnectionAccepterThread extends Thread {
 
     private ServerSocket providerSocket;
     private Server server;
-    private static final int PORT = 8001;
+    private static final int PORT = 8000;
 
     public ConnectionAccepterThread(Server server) {
         this.server = server;

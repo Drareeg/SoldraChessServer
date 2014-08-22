@@ -24,7 +24,6 @@
 package Domain;
 import Networking.Server;
 import Shared.Networking.AcceptChallengeMessage;
-import Shared.Networking.ChallengeMessage;
 import Shared.Networking.GameStartMessage;
 import Shared.Networking.MoveMessage;
 import Shared.Networking.ThisIsTheBoardMessage;
@@ -69,9 +68,8 @@ public class GameManager {
         }
         Game game = new Game(p1, p2, server);
         games.add(game);
-        GameStartMessage gameStartMessage = new GameStartMessage();
-        server.sendMessage(p1, gameStartMessage);
-        server.sendMessage(p2, gameStartMessage);
+        server.sendMessage(p1, new GameStartMessage(false)); //wit
+        server.sendMessage(p2, new GameStartMessage(true)); //zwart
         game.start();
     }
 }
