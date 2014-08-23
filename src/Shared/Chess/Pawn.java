@@ -22,6 +22,8 @@
  * THE SOFTWARE.
  */
 package Shared.Chess;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -80,4 +82,21 @@ public class Pawn extends ChessPiece {
         return false;
     }
 
+    @Override
+    ArrayList<ChessPiece> getAttackedPieces(Board board, Coordinate pieceLocation) {
+        ArrayList<ChessPiece> attackedPieces = new ArrayList();
+        Coordinate testCoord = leftFront.add(pieceLocation);
+        if (board.containsCoordinate(testCoord)) {
+            if (board.hasPiece(testCoord)) {
+                attackedPieces.add(board.getPiece(testCoord));
+            }
+        }
+        testCoord = rightFront.add(pieceLocation);
+        if (board.containsCoordinate(testCoord)) {
+            if (board.hasPiece(testCoord)) {
+                attackedPieces.add(board.getPiece(testCoord));
+            }
+        }
+        return attackedPieces;
+    }
 }

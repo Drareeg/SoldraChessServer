@@ -62,7 +62,7 @@ class Game {
         return player1 == source || player2 == source;
     }
 
-    void movePiece(Coordinate fromCoord, Coordinate toCoord) {
+    void movePieceIfAllowed(Coordinate fromCoord, Coordinate toCoord) {
         //nog checken of het command komt van dienen aan de beurt, en of dat een stuk is van hem
         if (board.isMoveAllowed(fromCoord, toCoord)) {
             board.movePiece(fromCoord, toCoord);

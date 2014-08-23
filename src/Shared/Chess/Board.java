@@ -68,6 +68,8 @@ public class Board implements Serializable {
         attract(toCoord, -1, 0);
         attract(toCoord, 0, 1);
         attract(toCoord, 0, -1);
+        System.out.println("is white in check:" + this.isInCheck(true));
+        System.out.println("is black in check:" + this.isInCheck(false));
         fireChanged();
     }
 
@@ -123,5 +125,21 @@ public class Board implements Serializable {
 
     public ChessPiece getPiece(Coordinate coord) {
         return model[coord.getRow()][coord.getCol()];
+    }
+
+    private boolean isInCheck(boolean white) { //is white/black in check
+        for (int row = 0; row < 7; row++) {
+            for (int col = 0; col < 7; col++) {
+                ChessPiece piece = model[row][col];
+                if (piece != null && piece.isWhite != white) { //je kan enkel schaak staan door enemy stukken
+                    for (ChessPiece attackedPiece : piece.getAttackedPieces(this, new Coordinate(row, col))) {
+                        if (attackedPiece instanceof King && attackedPiece.isWhite == white) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

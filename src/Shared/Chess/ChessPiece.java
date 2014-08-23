@@ -76,4 +76,20 @@ public abstract class ChessPiece implements Serializable {
         //als we het niet zijn tegengekomen mag de zet niet
         return false; //return checkspecialstuff() voor rokade en en passant en pion first move
     }
+
+    ArrayList<ChessPiece> getAttackedPieces(Board board, Coordinate pieceLocation) {
+        ArrayList<ChessPiece> attackedPieces = new ArrayList();
+        for (List<Coordinate> coordList : possibleMovesListList) {
+            for (Coordinate diffCoord : coordList) {
+                Coordinate testCoord = diffCoord.add(pieceLocation);
+                if (board.containsCoordinate(testCoord)) {
+                    if (board.hasPiece(testCoord)) {
+                        attackedPieces.add(board.getPiece(testCoord));
+                        break;
+                    }
+                }
+            }
+        }
+        return attackedPieces;
+    }
 }

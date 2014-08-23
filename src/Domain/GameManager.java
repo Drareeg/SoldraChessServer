@@ -50,7 +50,7 @@ public class GameManager {
     public void handleMove(MoveMessage moveMessage) {
         for (Game game : games) {
             if (game.hasPlayer(moveMessage.getSource())) {
-                game.movePiece(moveMessage.getFromCoord(), moveMessage.getToCoord());
+                game.movePieceIfAllowed(moveMessage.getFromCoord(), moveMessage.getToCoord());
                 for (Socket s : game.getPlayers()) {
                     server.sendMessage(s, new ThisIsTheBoardMessage(game.board));
                 }
