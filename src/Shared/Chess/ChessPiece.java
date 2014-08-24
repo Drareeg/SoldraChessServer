@@ -92,4 +92,18 @@ public abstract class ChessPiece implements Serializable {
         }
         return attackedPieces;
     }
+
+    //kan wel wa efficienter ;)
+    ArrayList<Coordinate> getReachableCoords(Coordinate pieceLocation, Board board) {
+        ArrayList<Coordinate> reachableFields = new ArrayList();
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Coordinate tryToReachThisCoord = new Coordinate(row, col);
+                if (canMoveFromTo(pieceLocation, tryToReachThisCoord, board)) {
+                    reachableFields.add(tryToReachThisCoord);
+                }
+            }
+        }
+        return reachableFields;
+    }
 }

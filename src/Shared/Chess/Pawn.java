@@ -56,7 +56,7 @@ public class Pawn extends ChessPiece {
         testCoord = fromCoord.add(twoForward);
         if (board.containsCoordinate(testCoord)) {
             boolean tweeVakkenErvoorLeeg = !board.hasPiece(testCoord);
-            if (!hasMoved && toCoord.equals(testCoord) && vakErvoorLeeg && tweeVakkenErvoorLeeg && fromCoord.getRow() == 1 || fromCoord.getRow() == 6) {
+            if (!hasMoved && toCoord.equals(testCoord) && vakErvoorLeeg && tweeVakkenErvoorLeeg && (fromCoord.getRow() == 1 || fromCoord.getRow() == 6)) {
                 return true;
             }
         }
@@ -83,18 +83,24 @@ public class Pawn extends ChessPiece {
 
     @Override
     ArrayList<ChessPiece> getAttackedPieces(Board board, Coordinate pieceLocation) {
+        if (pieceLocation.getRow() == 4) {
+            forward = forward;
+        }
         ArrayList<ChessPiece> attackedPieces = new ArrayList();
-        Coordinate testCoord = leftFront.add(pieceLocation);
+        Coordinate testCoord = rightFront.add(pieceLocation);
         if (board.containsCoordinate(testCoord)) {
             if (board.hasPiece(testCoord)) {
                 attackedPieces.add(board.getPiece(testCoord));
             }
         }
-        testCoord = rightFront.add(pieceLocation);
+        testCoord = leftFront.add(pieceLocation);
         if (board.containsCoordinate(testCoord)) {
             if (board.hasPiece(testCoord)) {
                 attackedPieces.add(board.getPiece(testCoord));
             }
+        }
+        if (!attackedPieces.isEmpty()) {
+            System.out.println("Pion op " + pieceLocation.toString() + " valt " + attackedPieces.size() + " stukken aan");
         }
         return attackedPieces;
     }

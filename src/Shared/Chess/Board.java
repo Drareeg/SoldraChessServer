@@ -73,12 +73,22 @@ public class Board implements Serializable {
         int toCol = toCoord.getCol();
         model[toRow][toCol] = model[fromRow][fromCol];
         model[fromRow][fromCol] = null;
+        //tornado
+        //tornado();
         //magneetschaak
-        attract(toCoord, 1, 0);
-        attract(toCoord, -1, 0);
-        attract(toCoord, 0, 1);
-        attract(toCoord, 0, -1);
+//        attract(toCoord, 1, 0);
+//        attract(toCoord, -1, 0);
+//        attract(toCoord, 0, 1);
+//        attract(toCoord, 0, -1);
         fireChanged();
+    }
+
+    private void tornado() {
+        ChessPiece temp = model[3][3];
+        model[3][3] = model[4][3];
+        model[4][3] = model[4][4];
+        model[4][4] = model[3][4];
+        model[3][4] = temp;
     }
 
     BoardChangeListener bcl;
@@ -148,6 +158,7 @@ public class Board implements Serializable {
                 if (piece != null && piece.isWhite != white) { //je kan enkel schaak staan door enemy stukken
                     for (ChessPiece attackedPiece : piece.getAttackedPieces(this, new Coordinate(row, col))) {
                         if (attackedPiece instanceof King && attackedPiece.isWhite == white) {
+                            System.out.println("isincheck");
                             return true;
                         }
                     }
@@ -156,4 +167,36 @@ public class Board implements Serializable {
         }
         return false;
     }
+
+    public boolean isMate(boolean checkingForWhite) {
+        if (isInCheck(checkingForWhite)) {
+            return hasNoLegalMoves(checkingForWhite);
+        }
+        return false;
+    }
+
+    public boolean isStaleMate(boolean checkingForWhite) {
+        if (!isInCheck(checkingForWhite)) {
+            return hasNoLegalMoves(checkingForWhite);
+        }
+        return false;
+    }
+
+    private boolean hasNoLegalMoves(boolean checkingForWhite) {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                ChessPiece pieceToCheck = model[row][col];
+                if (pieceToCheck != null && pieceToCheck.isWhite == checkingForWhite) {
+                    Coordinate pieceLocation = new Coordinate(row, col);
+                    for (Coordinate reachableField : pieceToCheck.getReachableCoords(pieceLocation, this)) {
+                        if (this.isMoveAllowed(pieceLocation, reachableField)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 }

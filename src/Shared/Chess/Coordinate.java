@@ -46,4 +46,11 @@ public class Coordinate extends Pair<Integer, Integer> {
         return new Coordinate(getKey() + fromCoord.getKey(), getValue() + fromCoord.getValue());
     }
 
+    private final static String[] cols = new String[]{"a", "b", "c", "d", "e", "f", "g", "h"};
+
+    @Override
+    public String toString() {
+        return cols[getCol()].toUpperCase() + (9 - ((getRow() + 1)));
+    }
+
 }

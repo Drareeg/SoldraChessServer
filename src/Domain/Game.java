@@ -65,7 +65,14 @@ class Game {
     void movePieceIfAllowed(Coordinate fromCoord, Coordinate toCoord) {
         //nog checken of het command komt van dienen aan de beurt, en of dat een stuk is van hem
         if (board.isMoveAllowed(fromCoord, toCoord)) {
+            boolean playerIsWhite = board.getPiece(fromCoord).isWhite;
             board.movePiece(fromCoord, toCoord);
+            if (board.isMate(!playerIsWhite)) {
+                System.out.println("MAT");
+            }
+            if (board.isStaleMate(!playerIsWhite)) {
+                System.out.println("PAT");
+            }
             nextTurn();
         }
         //later variantlogica in deze klasse, en hier ook
