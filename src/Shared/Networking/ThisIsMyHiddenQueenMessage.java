@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Drareeg.
+ * Copyright 2014 Dries Weyme & Geerard Ponnet.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,39 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Chess;
-import static Shared.Chess.ChessPiece.images;
-import java.util.ArrayList;
-import java.util.List;
-import javafx.scene.image.Image;
+package Shared.Networking;
 
 /**
  *
- * @author Drareeg
+ * @author Geerard
  */
-public class Rook extends ChessPiece {
+public class ThisIsMyHiddenQueenMessage extends Message {
 
-    public Rook(boolean isWhite) {
-        super(isWhite);
-        List<Coordinate> list1 = new ArrayList<>();
-        List<Coordinate> list2 = new ArrayList<>();
-        List<Coordinate> list3 = new ArrayList<>();
-        List<Coordinate> list4 = new ArrayList<>();
-        for (int i = 1; i < 8; i++) {
-            list1.add(new Coordinate(1 * i, 0));
-            list2.add(new Coordinate(-1 * i, 0));
-            list3.add(new Coordinate(0, -1 * i));
-            list4.add(new Coordinate(0, 1 * i));
-        }
-        possibleMovesListList.add(list1);
-        possibleMovesListList.add(list2);
-        possibleMovesListList.add(list3);
-        possibleMovesListList.add(list4);
+    private int col;
+    private boolean sentByWhite;
+
+    public ThisIsMyHiddenQueenMessage(int col, boolean sentByWhite) {
+        this.col = col;
+        this.sentByWhite = sentByWhite;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public boolean isSentByWhite() {
+        return sentByWhite;
     }
 
     @Override
-    public Image getImage(boolean amIWhite) {
-        return new Image(images.get("Rook" + (this.isWhite ? "W" : "B")));
+    public void handleSelf(MessageHandler m) {
+        m.handleThisIsMyHiddenQueenMessage(this);
     }
 
 }

@@ -22,9 +22,13 @@
  * THE SOFTWARE.
  */
 package Shared.Chess;
+import Shared.Chess.Variants.Board;
+import UI.SoldraChess;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import javafx.scene.image.Image;
 
 /**
  *
@@ -35,6 +39,7 @@ public abstract class ChessPiece implements Serializable {
     public boolean isWhite;
     public boolean hasMoved;
     public List<List<Coordinate>> possibleMovesListList;
+    protected Image image;
 
     public ChessPiece(boolean isWhite) {
         this.isWhite = isWhite;
@@ -49,7 +54,7 @@ public abstract class ChessPiece implements Serializable {
         return this.isWhite == piece.isWhite;
     }
 
-    boolean canMoveFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
+    public boolean canMoveFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
         for (List<Coordinate> coordList : possibleMovesListList) {
             for (Coordinate diffCoord : coordList) {
                 Coordinate testCoord = diffCoord.add(fromCoord);
@@ -77,7 +82,7 @@ public abstract class ChessPiece implements Serializable {
         return false; //return checkspecialstuff() voor rokade en en passant en pion first move
     }
 
-    ArrayList<ChessPiece> getAttackedPieces(Board board, Coordinate pieceLocation) {
+    public ArrayList<ChessPiece> getAttackedPieces(Board board, Coordinate pieceLocation) {
         ArrayList<ChessPiece> attackedPieces = new ArrayList();
         for (List<Coordinate> coordList : possibleMovesListList) {
             for (Coordinate diffCoord : coordList) {
@@ -94,7 +99,7 @@ public abstract class ChessPiece implements Serializable {
     }
 
     //kan wel wa efficienter ;)
-    ArrayList<Coordinate> getReachableCoords(Coordinate pieceLocation, Board board) {
+    public ArrayList<Coordinate> getReachableCoords(Coordinate pieceLocation, Board board) {
         ArrayList<Coordinate> reachableFields = new ArrayList();
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
@@ -106,4 +111,26 @@ public abstract class ChessPiece implements Serializable {
         }
         return reachableFields;
     }
+
+    public abstract Image getImage(boolean amIWhite);
+    public final static HashMap<String, String> images;
+
+    static {
+        images = new HashMap<>();
+        images.put("RookB", SoldraChess.class.getResource("resources/rook_black.png").toExternalForm());
+        images.put("RookW", SoldraChess.class.getResource("resources/rook_white.png").toExternalForm());
+        images.put("KnightB", SoldraChess.class.getResource("resources/knight_black.png").toExternalForm());
+        images.put("KnightW", SoldraChess.class.getResource("resources/knight_white.png").toExternalForm());
+        images.put("BishopB", SoldraChess.class.getResource("resources/bishop_black.png").toExternalForm());
+        images.put("BishopW", SoldraChess.class.getResource("resources/bishop_white.png").toExternalForm());
+        images.put("QueenB", SoldraChess.class.getResource("resources/queen_black.png").toExternalForm());
+        images.put("QueenW", SoldraChess.class.getResource("resources/queen_white.png").toExternalForm());
+        images.put("KingB", SoldraChess.class.getResource("resources/king_black.png").toExternalForm());
+        images.put("KingW", SoldraChess.class.getResource("resources/king_white.png").toExternalForm());
+        images.put("PawnB", SoldraChess.class.getResource("resources/pawn_black.png").toExternalForm());
+        images.put("PawnW", SoldraChess.class.getResource("resources/pawn_white.png").toExternalForm());
+        images.put("FieldB", SoldraChess.class.getResource("resources/field_black.png").toExternalForm());
+        images.put("FieldW", SoldraChess.class.getResource("resources/field_white.png").toExternalForm());
+    }
+
 }

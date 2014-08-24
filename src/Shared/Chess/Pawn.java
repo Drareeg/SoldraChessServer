@@ -22,7 +22,10 @@
  * THE SOFTWARE.
  */
 package Shared.Chess;
+import static Shared.Chess.ChessPiece.images;
+import Shared.Chess.Variants.Board;
 import java.util.ArrayList;
+import javafx.scene.image.Image;
 
 /**
  *
@@ -45,7 +48,7 @@ public class Pawn extends ChessPiece {
     }
 
     @Override
-    boolean canMoveFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
+    public boolean canMoveFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
         //vakje ervoor & leeg
         Coordinate testCoord = fromCoord.add(forward);
         boolean vakErvoorLeeg = !board.hasPiece(testCoord);
@@ -82,7 +85,7 @@ public class Pawn extends ChessPiece {
     }
 
     @Override
-    ArrayList<ChessPiece> getAttackedPieces(Board board, Coordinate pieceLocation) {
+    public ArrayList<ChessPiece> getAttackedPieces(Board board, Coordinate pieceLocation) {
         if (pieceLocation.getRow() == 4) {
             forward = forward;
         }
@@ -103,5 +106,10 @@ public class Pawn extends ChessPiece {
             System.out.println("Pion op " + pieceLocation.toString() + " valt " + attackedPieces.size() + " stukken aan");
         }
         return attackedPieces;
+    }
+
+    @Override
+    public Image getImage(boolean amIWhite) {
+        return new Image(images.get("Pawn" + (this.isWhite ? "W" : "B")));
     }
 }

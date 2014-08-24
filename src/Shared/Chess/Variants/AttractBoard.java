@@ -21,37 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Networking;
+package Shared.Chess.Variants;
+import Shared.Chess.Coordinate;
 
 /**
  *
- * @author Dries
+ * @author Geerard
  */
-public interface MessageHandler {
+public class AttractBoard extends Board {
+    @Override
+    public void postMove(Coordinate fromCoord, Coordinate toCoord) {
+        attract(toCoord, 1, 0);
+        attract(toCoord, -1, 0);
+        attract(toCoord, 0, 1);
+        attract(toCoord, 0, -1);
+    }
 
-    public void handleJoinLobby(JoinLobbyMessage message);
-
-    public void handleChallenge(ChallengeMessage challengeMessage);
-
-    public void handleMove(MoveMessage moveMessage);
-
-    public void handleGameStart(GameStartMessage gameStart);
-
-    public void handleThisIsTheLobbyMessage(ThisIsTheLobbyMessage thisIsTheLobby);
-
-    public void handleLeaveLobby(LeaveLobbyMessage leaveLobby);
-
-    public void handleChatMessage(ChatMessage aThis);
-
-    public void handleThisIsTheBoard(ThisIsTheBoardMessage aThis);
-
-    public void handleTurnMessage(TurnMessage aThis);
-
-    public void handleAcceptChallenge(AcceptChallengeMessage aThis);
-
-    public void handleGameFinished(GameFinishedMessage aThis);
-
-    public void handleSurrender(SurrenderMessage aThis);
-
-    public void handleThisIsMyHiddenQueenMessage(ThisIsMyHiddenQueenMessage aThis);
+    private void attract(Coordinate origin, int rdiff, int cdiff) {
+        int row = origin.getRow();
+        int col = origin.getCol();
+        int testR = row;
+        int testC = col;
+        boolean done = false;
+        while (testR + rdiff >= 0 && testR + rdiff <= 7 && testC + cdiff >= 0 && testC + cdiff <= 7 && !done) {
+            testR += rdiff;
+            testC += cdiff;
+            if (model[testR][testC] != null) {
+                done = true;
+                //als het ernaast stond willen we het niet verwijderen
+                if (!(testR - row == rdiff && testC - col == cdiff)) {
+                    model[row + rdiff][ col + cdiff] = model[testR][testC];
+                    model[testR][testC] = null;
+                }
+            }
+        }
+    }
 }

@@ -22,8 +22,10 @@
  * THE SOFTWARE.
  */
 package Shared.Chess;
+import static Shared.Chess.ChessPiece.images;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.image.Image;
 
 /**
  *
@@ -59,6 +61,11 @@ public class Queen extends ChessPiece {
         possibleMovesListList.add(list6);
         possibleMovesListList.add(list7);
         possibleMovesListList.add(list8);
+    }
+
+    @Override
+    public Image getImage(boolean amIWhite) {
+        return new Image(images.get("Queen" + (this.isWhite ? "W" : "B")));
     }
 
 }

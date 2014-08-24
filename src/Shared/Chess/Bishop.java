@@ -24,6 +24,7 @@
 package Shared.Chess;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.image.Image;
 
 /**
  *
@@ -52,6 +53,11 @@ public class Bishop extends ChessPiece {
         possibleMovesListList.add(list2);
         possibleMovesListList.add(list3);
         possibleMovesListList.add(list4);
+    }
+
+    @Override
+    public Image getImage(boolean amIWhite) {
+        return new Image(images.get("Bishop" + (this.isWhite ? "W" : "B")));
     }
 
 }

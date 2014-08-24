@@ -21,7 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Chess;
+package Shared.Chess.Variants;
+import Shared.Chess.Bishop;
+import Shared.Chess.ChessPiece;
+import Shared.Chess.Coordinate;
+import Shared.Chess.King;
+import Shared.Chess.Knight;
+import Shared.Chess.Pawn;
+import Shared.Chess.Queen;
+import Shared.Chess.Rook;
+import Shared.Networking.Message;
 import UI.BoardChangeListener;
 import java.io.Serializable;
 
@@ -30,7 +39,7 @@ import java.io.Serializable;
  * @author Drareeg
  */
 public class Board implements Serializable {
-    private ChessPiece[][] model;
+    protected ChessPiece[][] model;
 
     public Board() {
         model = new ChessPiece[8][8];
@@ -73,22 +82,9 @@ public class Board implements Serializable {
         int toCol = toCoord.getCol();
         model[toRow][toCol] = model[fromRow][fromCol];
         model[fromRow][fromCol] = null;
-        //tornado
-        //tornado();
-        //magneetschaak
-//        attract(toCoord, 1, 0);
-//        attract(toCoord, -1, 0);
-//        attract(toCoord, 0, 1);
-//        attract(toCoord, 0, -1);
+        //varianten overschrijven postMove
+        postMove(fromCoord, toCoord);
         fireChanged();
-    }
-
-    private void tornado() {
-        ChessPiece temp = model[3][3];
-        model[3][3] = model[4][3];
-        model[4][3] = model[4][4];
-        model[4][4] = model[3][4];
-        model[3][4] = temp;
     }
 
     BoardChangeListener bcl;
@@ -101,26 +97,6 @@ public class Board implements Serializable {
 
     public void setBCL(BoardChangeListener aThis) {
         this.bcl = aThis;
-    }
-
-    private void attract(Coordinate origin, int rdiff, int cdiff) {
-        int row = origin.getRow();
-        int col = origin.getCol();
-        int testR = row;
-        int testC = col;
-        boolean done = false;
-        while (testR + rdiff >= 0 && testR + rdiff <= 7 && testC + cdiff >= 0 && testC + cdiff <= 7 && !done) {
-            testR += rdiff;
-            testC += cdiff;
-            if (model[testR][testC] != null) {
-                done = true;
-                //als het ernaast stond willen we het niet verwijderen
-                if (!(testR - row == rdiff && testC - col == cdiff)) {
-                    model[row + rdiff][ col + cdiff] = model[testR][testC];
-                    model[testR][testC] = null;
-                }
-            }
-        }
     }
 
     public void updateTo(Board board) {
@@ -138,12 +114,12 @@ public class Board implements Serializable {
         return model[fromCoord.getRow()][fromCoord.getCol()].canMoveFromTo(fromCoord, toCoord, this);
     }
 
-    boolean containsCoordinate(Coordinate coord) {
+    public boolean containsCoordinate(Coordinate coord) {
         return coord.getRow() >= 0 && coord.getRow() <= 7
                 && coord.getCol() >= 0 && coord.getCol() <= 7;
     }
 
-    boolean hasPiece(Coordinate coord) {
+    public boolean hasPiece(Coordinate coord) {
         return model[coord.getRow()][coord.getCol()] != null;
     }
 
@@ -197,6 +173,14 @@ public class Board implements Serializable {
             }
         }
         return true;
+    }
+
+    //in normale schaak is er geen actie na een zet
+    public void postMove(Coordinate fromCoord, Coordinate toCoord) {
+    }
+
+    //sommige schaakvarianten moeten kunnen reageren op messages, bv verborgen dame op de keuze van de dame.
+    public void handleCustomMessage(Message message) {
     }
 
 }

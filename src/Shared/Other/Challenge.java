@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  */
 package Shared.Other;
+import Shared.Chess.Variants.Variant;
 import java.io.Serializable;
 
 /**
@@ -30,16 +31,15 @@ import java.io.Serializable;
  */
 public class Challenge implements Serializable {
 
-    //met enums ofzo later
-    private int variant;
+    private Variant variant;
     private String origin;
 
-    public Challenge(int variant, String origin) {
+    public Challenge(Variant variant, String origin) {
         this.variant = variant;
         this.origin = origin;
     }
 
-    public int getVariant() {
+    public Variant getVariant() {
         return variant;
     }
 
@@ -49,7 +49,7 @@ public class Challenge implements Serializable {
 
     @Override
     public String toString() {
-        return origin + " wants to play " + variant;
+        return origin + " wants to play " + variant.getName();
     }
 
 }

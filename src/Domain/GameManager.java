@@ -23,11 +23,17 @@
  */
 package Domain;
 import Networking.Server;
+import Shared.Chess.Variants.AttractBoard;
+import Shared.Chess.Variants.Board;
+import Shared.Chess.Variants.HiddenQueenBoard;
+import Shared.Chess.Variants.TornadoBoard;
+import Shared.Chess.Variants.Variant;
 import Shared.Networking.AcceptChallengeMessage;
 import Shared.Networking.GameFinishedMessage;
 import Shared.Networking.GameStartMessage;
 import Shared.Networking.MoveMessage;
 import Shared.Networking.SurrenderMessage;
+import Shared.Networking.ThisIsMyHiddenQueenMessage;
 import Shared.Networking.ThisIsTheBoardMessage;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -69,7 +75,22 @@ public class GameManager {
         if (p2 == null) {
             System.out.println("couldnt find socket for username " + aThis.getChallenge().getOrigin());
         }
-        Game game = new Game(p1, p2, server);
+        Variant v = aThis.getChallenge().getVariant();
+        //TODO: board/game logisch onderverdelen nu varianten ontstaan
+        Board board = null;
+        if (v.equals(Variant.ATTRACT)) {
+            board = new AttractBoard();
+        }
+        if (v.equals(Variant.HIDDENQUEEN)) {
+            board = new HiddenQueenBoard();
+        }
+        if (v.equals(Variant.TORNADO)) {
+            board = new TornadoBoard();
+        }
+        if (v.equals(Variant.CLASSIC)) {
+            board = new Board();
+        }
+        Game game = new Game(p1, p2, server, board);
         games.add(game);
         server.sendMessage(p1, new GameStartMessage(false, server.getUserNameFromSocket(p2))); //wit
         server.sendMessage(p2, new GameStartMessage(true, aThis.getChallenge().getOrigin())); //zwart
@@ -80,6 +101,14 @@ public class GameManager {
         for (Game game : games) {
             if (game.hasPlayer(aThis.getSource())) {
                 server.sendMessage(game.getOtherPlayer(aThis.getSource()), new GameFinishedMessage(1));
+            }
+        }
+    }
+
+    public void handleHiddenQueen(ThisIsMyHiddenQueenMessage aThis) {
+        for (Game game : games) {
+            if (game.hasPlayer(aThis.getSource())) {
+                game.board.handleCustomMessage(aThis);
             }
         }
     }

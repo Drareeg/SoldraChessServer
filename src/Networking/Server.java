@@ -44,6 +44,7 @@ import Shared.Networking.ThisIsTheLobbyMessage;
 import java.util.concurrent.ConcurrentHashMap;
 import Shared.Networking.MessageHandler;
 import Shared.Networking.SurrenderMessage;
+import Shared.Networking.ThisIsMyHiddenQueenMessage;
 import Shared.Networking.ThisIsTheBoardMessage;
 import Shared.Networking.TurnMessage;
 
@@ -201,6 +202,11 @@ public class Server implements MessageHandler {
     @Override
     public void handleSurrender(SurrenderMessage aThis) {
         gameManager.handleSurrender(aThis);
+    }
+
+    @Override
+    public void handleThisIsMyHiddenQueenMessage(ThisIsMyHiddenQueenMessage aThis) {
+        this.gameManager.handleHiddenQueen(aThis);
     }
 
 }

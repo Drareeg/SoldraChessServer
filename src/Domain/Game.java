@@ -24,7 +24,7 @@
 package Domain;
 
 import Networking.Server;
-import Shared.Chess.Board;
+import Shared.Chess.Variants.Board;
 import Shared.Chess.Coordinate;
 import Shared.Networking.GameFinishedMessage;
 import Shared.Networking.TurnMessage;
@@ -45,14 +45,14 @@ class Game {
 
     //idee dat ergens moet staan, vast niet hier. hopelijk lees ik het nog eens
     //ipv bij promotie auto dame/laten kiezen, tijdens de match in de GUI reeds kunnen aanduiden wat de volgende promotie moet zijn.
-    public Game(Socket player1, Socket player2, Server server) {
+    public Game(Socket player1, Socket player2, Server server, Board board) {
         this.server = server;
         this.player1 = player1;
         this.player2 = player2;
         if (player1 == player2) {
             System.out.println("DAFUQ, da meende nu toch niet.");
         }
-        board = new Board();
+        this.board = board;
     }
 
     public void start() {
