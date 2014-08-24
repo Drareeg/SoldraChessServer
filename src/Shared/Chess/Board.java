@@ -56,6 +56,16 @@ public class Board implements Serializable {
         }
     }
 
+    //copy constr -> nog steeds zelfde chesspiece objecten, oppassen met hasmoved dat niet veranderd!
+    private Board(Board from) {
+        this.model = new ChessPiece[8][8];
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                this.model[row][col] = from.model[row][col];
+            }
+        }
+    }
+
     public void movePiece(Coordinate fromCoord, Coordinate toCoord) {
         int fromRow = fromCoord.getRow();
         int fromCol = fromCoord.getCol();
@@ -68,8 +78,6 @@ public class Board implements Serializable {
         attract(toCoord, -1, 0);
         attract(toCoord, 0, 1);
         attract(toCoord, 0, -1);
-        System.out.println("is white in check:" + this.isInCheck(true));
-        System.out.println("is black in check:" + this.isInCheck(false));
         fireChanged();
     }
 
@@ -111,6 +119,12 @@ public class Board implements Serializable {
     }
 
     public boolean isMoveAllowed(Coordinate fromCoord, Coordinate toCoord) {
+        boolean playerIsWhite = this.getPiece(fromCoord).isWhite;
+        Board boardCopy = new Board(this);
+        boardCopy.movePiece(fromCoord, toCoord);
+        if (boardCopy.isInCheck(playerIsWhite)) { // als de zet uitgevoerd resulteert in schaak van de kleur van de zetter -> mag niet
+            return false;
+        }
         return model[fromCoord.getRow()][fromCoord.getCol()].canMoveFromTo(fromCoord, toCoord, this);
     }
 

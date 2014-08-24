@@ -23,7 +23,6 @@
  */
 package Shared.Chess;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -57,7 +56,7 @@ public class Pawn extends ChessPiece {
         testCoord = fromCoord.add(twoForward);
         if (board.containsCoordinate(testCoord)) {
             boolean tweeVakkenErvoorLeeg = !board.hasPiece(testCoord);
-            if (!hasMoved && toCoord.equals(testCoord) && vakErvoorLeeg && tweeVakkenErvoorLeeg) {
+            if (!hasMoved && toCoord.equals(testCoord) && vakErvoorLeeg && tweeVakkenErvoorLeeg && fromCoord.getRow() == 1 || fromCoord.getRow() == 6) {
                 return true;
             }
         }
@@ -70,8 +69,8 @@ public class Pawn extends ChessPiece {
             }
         }
         //rechtservoor && daar staat enemy
+        testCoord = fromCoord.add(rightFront);
         if (board.containsCoordinate(testCoord)) {
-            testCoord = fromCoord.add(rightFront);
             ChessPiece takePiece = board.getPiece(testCoord); //het stuk dat het potentieen kan pakken
             if (toCoord.equals(testCoord) && takePiece != null && !takePiece.isSameColor(this)) {
                 return true;
