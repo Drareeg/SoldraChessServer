@@ -24,32 +24,25 @@
 package Shared.Networking;
 
 /**
+ * S -> C: the game you were playing has finished and result is...
  *
- * @author Dries
+ * @author Geerard
  */
-public interface MessageHandler {
+public class GameFinishedMessage extends Message {
 
-    public void handleJoinLobby(JoinLobbyMessage message);
+    private int result;
 
-    public void handleChallenge(ChallengeMessage challengeMessage);
+    public GameFinishedMessage(int result) {
+        this.result = result;
+    }
 
-    public void handleMove(MoveMessage moveMessage);
+    public int getResult() {
+        return result;
+    }
 
-    public void handleGameStart(GameStartMessage gameStart);
+    @Override
+    public void handleSelf(MessageHandler m) {
+        m.handleGameFinished(this);
+    }
 
-    public void handleThisIsTheLobbyMessage(ThisIsTheLobbyMessage thisIsTheLobby);
-
-    public void handleLeaveLobby(LeaveLobbyMessage leaveLobby);
-
-    public void handleChatMessage(ChatMessage aThis);
-
-    public void handleThisIsTheBoard(ThisIsTheBoardMessage aThis);
-
-    public void handleTurnMessage(TurnMessage aThis);
-
-    public void handleAcceptChallenge(AcceptChallengeMessage aThis);
-
-    public void handleGameFinished(GameFinishedMessage aThis);
-
-    public void handleSurrender(SurrenderMessage aThis);
 }

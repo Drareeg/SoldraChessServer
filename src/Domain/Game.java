@@ -26,6 +26,7 @@ package Domain;
 import Networking.Server;
 import Shared.Chess.Board;
 import Shared.Chess.Coordinate;
+import Shared.Networking.GameFinishedMessage;
 import Shared.Networking.TurnMessage;
 import com.sun.javafx.collections.ImmutableObservableList;
 import java.net.Socket;
@@ -68,10 +69,12 @@ class Game {
             boolean playerIsWhite = board.getPiece(fromCoord).isWhite;
             board.movePiece(fromCoord, toCoord);
             if (board.isMate(!playerIsWhite)) {
-                System.out.println("MAT");
+                gameWon(turn == 0);
+                return;
             }
             if (board.isStaleMate(!playerIsWhite)) {
-                System.out.println("PAT");
+                gameDrawed();
+                return;
             }
             nextTurn();
         }
@@ -86,6 +89,23 @@ class Game {
         turn = (turn + 1) % 2;
         server.sendMessage(player1, new TurnMessage(turn == 0));
         server.sendMessage(player2, new TurnMessage(turn != 0));
+    }
+
+    //TODO afgehandelde games nog verwijderen uit gamemeneger (met een callback)
+    public void gameWon(boolean player1Won) {
+        Socket winner = player1Won ? player1 : player2;
+        server.sendMessage(player1, new GameFinishedMessage(1));
+        server.sendMessage(player2, new GameFinishedMessage(0));
+    }
+
+    public void gameDrawed() {
+        //tijdelijk 2 = DRAW
+        server.sendMessage(player1, new GameFinishedMessage(2));
+        server.sendMessage(player2, new GameFinishedMessage(2));
+    }
+
+    Socket getOtherPlayer(Socket source) {
+        return player1 == source ? player2 : player1;
     }
 
 }

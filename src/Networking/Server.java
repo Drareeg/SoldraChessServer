@@ -27,6 +27,7 @@ import Domain.GameManager;
 import Shared.Networking.AcceptChallengeMessage;
 import Shared.Networking.ChallengeMessage;
 import Shared.Networking.ChatMessage;
+import Shared.Networking.GameFinishedMessage;
 import Shared.Networking.GameStartMessage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -42,6 +43,7 @@ import Shared.Networking.MoveMessage;
 import Shared.Networking.ThisIsTheLobbyMessage;
 import java.util.concurrent.ConcurrentHashMap;
 import Shared.Networking.MessageHandler;
+import Shared.Networking.SurrenderMessage;
 import Shared.Networking.ThisIsTheBoardMessage;
 import Shared.Networking.TurnMessage;
 
@@ -190,4 +192,15 @@ public class Server implements MessageHandler {
     public String getUserNameFromSocket(Socket socket) {
         return clientUsernameMap.get(socket);
     }
+
+    @Override
+    public void handleGameFinished(GameFinishedMessage aThis) {
+        throw new UnsupportedOperationException("Enkel voor client."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void handleSurrender(SurrenderMessage aThis) {
+        gameManager.handleSurrender(aThis);
+    }
+
 }

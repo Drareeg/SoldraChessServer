@@ -24,8 +24,10 @@
 package Domain;
 import Networking.Server;
 import Shared.Networking.AcceptChallengeMessage;
+import Shared.Networking.GameFinishedMessage;
 import Shared.Networking.GameStartMessage;
 import Shared.Networking.MoveMessage;
+import Shared.Networking.SurrenderMessage;
 import Shared.Networking.ThisIsTheBoardMessage;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ public class GameManager {
     //om messages te versturen
     private Server server;
 
+    //TODO afgehandelde games nog afhandelen
     private List<Game> games;
 
     public GameManager(Server server) {
@@ -71,5 +74,13 @@ public class GameManager {
         server.sendMessage(p1, new GameStartMessage(false, server.getUserNameFromSocket(p2))); //wit
         server.sendMessage(p2, new GameStartMessage(true, aThis.getChallenge().getOrigin())); //zwart
         game.start();
+    }
+
+    public void handleSurrender(SurrenderMessage aThis) {
+        for (Game game : games) {
+            if (game.hasPlayer(aThis.getSource())) {
+                server.sendMessage(game.getOtherPlayer(aThis.getSource()), new GameFinishedMessage(1));
+            }
+        }
     }
 }
