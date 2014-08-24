@@ -75,13 +75,12 @@ public class Board implements Serializable {
         }
     }
 
+    public ChessPiece[][] getModel() {
+        return model;
+    }
+
     public void movePiece(Coordinate fromCoord, Coordinate toCoord) {
-        int fromRow = fromCoord.getRow();
-        int fromCol = fromCoord.getCol();
-        int toRow = toCoord.getRow();
-        int toCol = toCoord.getCol();
-        model[toRow][toCol] = model[fromRow][fromCol];
-        model[fromRow][fromCol] = null;
+        getPiece(fromCoord).executeMove(fromCoord, toCoord, this);
         //varianten overschrijven postMove
         postMove(fromCoord, toCoord);
         fireChanged();
@@ -89,7 +88,7 @@ public class Board implements Serializable {
 
     BoardChangeListener bcl;
 
-    private void fireChanged() {
+    public void fireChanged() {
         if (bcl != null) {
             bcl.boardChanged();
         }

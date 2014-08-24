@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  */
 package Shared.Networking;
+import Shared.Chess.Variants.Variant;
 
 /**
  * S -> C: a new game started for you
@@ -32,10 +33,12 @@ public class GameStartMessage extends Message {
 
     boolean amIWhite;
     String againstName;
+    Variant variant;
 
-    public GameStartMessage(boolean amIWhite, String againstName) {
+    public GameStartMessage(boolean amIWhite, String againstName, Variant variant) {
         this.amIWhite = amIWhite;
         this.againstName = againstName;
+        this.variant = variant;
     }
 
     public boolean AmIWhite() {
@@ -44,6 +47,10 @@ public class GameStartMessage extends Message {
 
     public String getAgainstName() {
         return againstName;
+    }
+
+    public Variant getVariant() {
+        return variant;
     }
 
     @Override

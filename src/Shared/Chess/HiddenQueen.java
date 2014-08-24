@@ -69,9 +69,23 @@ public class HiddenQueen extends ChessPiece {
             return queen.getImage(isWhite);
         }
         if (fromWhiteStandpoint == isWhite) {
-            return new Image(images.get("Undercover" + (this.isWhite ? "W" : "B")));
+            return new Image(images.get("Undercover"));
         }
         return pawn.getImage(isWhite);
+    }
+
+    @Override
+    public void executeMove(Coordinate fromCoord, Coordinate toCoord, Board b) {
+        if (!discovered && !pawn.canMoveFromTo(fromCoord, toCoord, b)) {
+            System.out.println("QUEEN DISCOVERED");
+            discovered = true;
+        }
+        int fromRow = fromCoord.getRow();
+        int fromCol = fromCoord.getCol();
+        int toRow = toCoord.getRow();
+        int toCol = toCoord.getCol();
+        b.getModel()[toRow][toCol] = b.getModel()[fromRow][fromCol];
+        b.getModel()[fromRow][fromCol] = null;
     }
 
 }

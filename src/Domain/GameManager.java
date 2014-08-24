@@ -92,8 +92,8 @@ public class GameManager {
         }
         Game game = new Game(p1, p2, server, board);
         games.add(game);
-        server.sendMessage(p1, new GameStartMessage(false, server.getUserNameFromSocket(p2))); //wit
-        server.sendMessage(p2, new GameStartMessage(true, aThis.getChallenge().getOrigin())); //zwart
+        server.sendMessage(p1, new GameStartMessage(false, server.getUserNameFromSocket(p2), v)); //wit
+        server.sendMessage(p2, new GameStartMessage(true, aThis.getChallenge().getOrigin(), v)); //zwart
         game.start();
     }
 
@@ -109,6 +109,9 @@ public class GameManager {
         for (Game game : games) {
             if (game.hasPlayer(aThis.getSource())) {
                 game.board.handleCustomMessage(aThis);
+                for (Socket s : game.getPlayers()) {
+                    server.sendMessage(s, new ThisIsTheBoardMessage(game.board));
+                }
             }
         }
     }

@@ -32,11 +32,32 @@ import Shared.Networking.ThisIsMyHiddenQueenMessage;
  */
 public class HiddenQueenBoard extends Board {
 
+    boolean hasWhiteChoosenQueen;
+    boolean hasBlackChoosenQueen;
+
     @Override
     public void handleCustomMessage(Message message) {
         if (message instanceof ThisIsMyHiddenQueenMessage) {
             ThisIsMyHiddenQueenMessage qMessage = (ThisIsMyHiddenQueenMessage) message;
             model[qMessage.isSentByWhite() ? 6 : 1][qMessage.getCol()] = new HiddenQueen(qMessage.isSentByWhite());
+            if (qMessage.isSentByWhite()) {
+                hasWhiteChoosenQueen = true;
+            } else {
+                hasBlackChoosenQueen = true;
+            }
         }
+        super.fireChanged();
     }
+
+    public boolean hasChosenQueen(boolean amIWhite) {
+        return amIWhite ? hasWhiteChoosenQueen : hasBlackChoosenQueen;
+    }
+
+    public void updateTo(Board board) {
+        hasWhiteChoosenQueen = ((HiddenQueenBoard) board).hasWhiteChoosenQueen;
+        hasBlackChoosenQueen = ((HiddenQueenBoard) board).hasBlackChoosenQueen;
+        this.model = board.model;
+        fireChanged();
+    }
+
 }
