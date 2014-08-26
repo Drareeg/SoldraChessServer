@@ -72,6 +72,7 @@ public class PositionJuror {
     }
 
     private boolean hasNoLegalMoves(NormalChess variant, Board board, boolean checkingForWhite) {
+        int moves = 0;
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 ChessPiece pieceToCheck = board.getPiece(new Coordinate(row, col));
@@ -79,13 +80,16 @@ public class PositionJuror {
                     Coordinate pieceLocation = new Coordinate(row, col);
                     for (Coordinate reachableField : pieceToCheck.getReachableCoords(pieceLocation, board)) {
                         if (variant.isMoveAllowed(pieceLocation, reachableField)) {
-                            return false;
+                            moves++; // TODO
+                            //return false;
                         }
                     }
                 }
             }
         }
-        return true;
+        System.out.println(checkingForWhite + "has " + moves + " possible moves  ");
+        return moves == 0;
+        //return true;
     }
 
 }

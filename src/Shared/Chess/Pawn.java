@@ -50,7 +50,7 @@ public class Pawn extends ChessPiece {
     public boolean canReachFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
         //vakje ervoor & leeg
         Coordinate testCoord = fromCoord.add(forward);
-        boolean vakErvoorLeeg = !board.hasPiece(testCoord);
+        boolean vakErvoorLeeg = board.isValidCoordinate(testCoord) && !board.hasPiece(testCoord);
         if (toCoord.equals(testCoord) && vakErvoorLeeg) {
             return true;
         }
