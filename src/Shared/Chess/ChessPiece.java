@@ -22,7 +22,8 @@
  * THE SOFTWARE.
  */
 package Shared.Chess;
-import Shared.Chess.Variants.Board;
+import Domain.Chess.Board;
+import Domain.Chess.Variants.NormalChess;
 import UI.SoldraChess;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -58,8 +59,8 @@ public abstract class ChessPiece implements Serializable {
         for (List<Coordinate> coordList : possibleMovesListList) {
             for (Coordinate diffCoord : coordList) {
                 Coordinate testCoord = diffCoord.add(fromCoord);
-                if (board.containsCoordinate(testCoord)) {
-                    if (board.hasPiece(testCoord)) {
+                if (board.isValidCoordinate(testCoord)) {
+                    if (board.getPiece(testCoord) != null) {
                         if (this.isSameColor(board.getPiece(testCoord))) {
                             break; // als het stuk dat we tegenkomen dezelfde kleur is gaan we over naar de volgende lijst
                         } else {
@@ -87,8 +88,8 @@ public abstract class ChessPiece implements Serializable {
         for (List<Coordinate> coordList : possibleMovesListList) {
             for (Coordinate diffCoord : coordList) {
                 Coordinate testCoord = diffCoord.add(pieceLocation);
-                if (board.containsCoordinate(testCoord)) {
-                    if (board.hasPiece(testCoord)) {
+                if (board.isValidCoordinate(testCoord)) {
+                    if (board.getPiece(testCoord) != null) {
                         attackedPieces.add(board.getPiece(testCoord));
                         break;
                     }
@@ -135,12 +136,8 @@ public abstract class ChessPiece implements Serializable {
     }
 
     public void executeMove(Coordinate fromCoord, Coordinate toCoord, Board b) {
-        int fromRow = fromCoord.getRow();
-        int fromCol = fromCoord.getCol();
-        int toRow = toCoord.getRow();
-        int toCol = toCoord.getCol();
-        b.getModel()[toRow][toCol] = b.getModel()[fromRow][fromCol];
-        b.getModel()[fromRow][fromCol] = null;
+        b.setPiece(toCoord, b.getPiece(fromCoord));
+        b.setPiece(fromCoord, null);
     }
 
 }

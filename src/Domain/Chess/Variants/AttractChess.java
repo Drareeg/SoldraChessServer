@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Chess.Variants;
+package Domain.Chess.Variants;
 import Shared.Chess.Coordinate;
 
 /**
  *
  * @author Geerard
  */
-public class AttractBoard extends Board {
+public class AttractChess extends NormalChess {
     @Override
     public void postMove(Coordinate fromCoord, Coordinate toCoord) {
         attract(toCoord, 1, 0);
@@ -46,12 +46,12 @@ public class AttractBoard extends Board {
         while (testR + rdiff >= 0 && testR + rdiff <= 7 && testC + cdiff >= 0 && testC + cdiff <= 7 && !done) {
             testR += rdiff;
             testC += cdiff;
-            if (model[testR][testC] != null) {
+            if (board.getPiece(new Coordinate(testR, testC)) != null) {
                 done = true;
                 //als het ernaast stond willen we het niet verwijderen
                 if (!(testR - row == rdiff && testC - col == cdiff)) {
-                    model[row + rdiff][ col + cdiff] = model[testR][testC];
-                    model[testR][testC] = null;
+                    board.setPiece(new Coordinate(row + rdiff, col + cdiff), board.getPiece(new Coordinate(testR, testC)));
+                    board.setPiece(new Coordinate(testR, testC), null);
                 }
             }
         }

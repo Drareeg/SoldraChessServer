@@ -22,8 +22,9 @@
  * THE SOFTWARE.
  */
 package Shared.Chess;
+import Domain.Chess.Board;
 import static Shared.Chess.ChessPiece.images;
-import Shared.Chess.Variants.Board;
+import Domain.Chess.Variants.NormalChess;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
 
@@ -57,7 +58,7 @@ public class Pawn extends ChessPiece {
         }
         //niet begwogen & 2 vakken ervoor
         testCoord = fromCoord.add(twoForward);
-        if (board.containsCoordinate(testCoord)) {
+        if (board.isValidCoordinate(testCoord)) {
             boolean tweeVakkenErvoorLeeg = !board.hasPiece(testCoord);
             if (!hasMoved && toCoord.equals(testCoord) && vakErvoorLeeg && tweeVakkenErvoorLeeg && (fromCoord.getRow() == 1 || fromCoord.getRow() == 6)) {
                 return true;
@@ -65,7 +66,7 @@ public class Pawn extends ChessPiece {
         }
         //linkservoor && daar staat enemy
         testCoord = fromCoord.add(leftFront);
-        if (board.containsCoordinate(testCoord)) {
+        if (board.isValidCoordinate(testCoord)) {
             ChessPiece takePiece = board.getPiece(testCoord); //het stuk dat het potentieen kan pakken
             if (toCoord.equals(testCoord) && takePiece != null && !takePiece.isSameColor(this)) {
                 return true;
@@ -73,7 +74,7 @@ public class Pawn extends ChessPiece {
         }
         //rechtservoor && daar staat enemy
         testCoord = fromCoord.add(rightFront);
-        if (board.containsCoordinate(testCoord)) {
+        if (board.isValidCoordinate(testCoord)) {
             ChessPiece takePiece = board.getPiece(testCoord); //het stuk dat het potentieen kan pakken
             if (toCoord.equals(testCoord) && takePiece != null && !takePiece.isSameColor(this)) {
                 return true;
@@ -91,13 +92,13 @@ public class Pawn extends ChessPiece {
         }
         ArrayList<ChessPiece> attackedPieces = new ArrayList();
         Coordinate testCoord = rightFront.add(pieceLocation);
-        if (board.containsCoordinate(testCoord)) {
+        if (board.isValidCoordinate(testCoord)) {
             if (board.hasPiece(testCoord)) {
                 attackedPieces.add(board.getPiece(testCoord));
             }
         }
         testCoord = leftFront.add(pieceLocation);
-        if (board.containsCoordinate(testCoord)) {
+        if (board.isValidCoordinate(testCoord)) {
             if (board.hasPiece(testCoord)) {
                 attackedPieces.add(board.getPiece(testCoord));
             }

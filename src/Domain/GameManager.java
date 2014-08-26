@@ -23,11 +23,11 @@
  */
 package Domain;
 import Networking.Server;
-import Shared.Chess.Variants.AttractBoard;
-import Shared.Chess.Variants.Board;
-import Shared.Chess.Variants.HiddenQueenBoard;
-import Shared.Chess.Variants.TornadoBoard;
-import Shared.Chess.Variants.Variant;
+import Domain.Chess.Variants.AttractChess;
+import Domain.Chess.Variants.NormalChess;
+import Domain.Chess.Variants.HiddenQueenChess;
+import Domain.Chess.Variants.TornadoChess;
+import Domain.Chess.Variants.Variant;
 import Shared.Networking.AcceptChallengeMessage;
 import Shared.Networking.GameFinishedMessage;
 import Shared.Networking.GameStartMessage;
@@ -61,7 +61,7 @@ public class GameManager {
             if (game.hasPlayer(moveMessage.getSource())) {
                 game.movePieceIfAllowed(moveMessage.getFromCoord(), moveMessage.getToCoord());
                 for (Socket s : game.getPlayers()) {
-                    server.sendMessage(s, new ThisIsTheBoardMessage(game.board));
+                    server.sendMessage(s, new ThisIsTheBoardMessage(game.getBoard()));
                 }
             }
         }
@@ -77,18 +77,18 @@ public class GameManager {
         }
         Variant v = aThis.getChallenge().getVariant();
         //TODO: board/game logisch onderverdelen nu varianten ontstaan
-        Board board = null;
+        NormalChess board = null;
         if (v.equals(Variant.ATTRACT)) {
-            board = new AttractBoard();
+            board = new AttractChess();
         }
         if (v.equals(Variant.HIDDENQUEEN)) {
-            board = new HiddenQueenBoard();
+            board = new HiddenQueenChess();
         }
         if (v.equals(Variant.TORNADO)) {
-            board = new TornadoBoard();
+            board = new TornadoChess();
         }
         if (v.equals(Variant.CLASSIC)) {
-            board = new Board();
+            board = new NormalChess();
         }
         Game game = new Game(p1, p2, server, board);
         games.add(game);
@@ -108,9 +108,9 @@ public class GameManager {
     public void handleHiddenQueen(ThisIsMyHiddenQueenMessage aThis) {
         for (Game game : games) {
             if (game.hasPlayer(aThis.getSource())) {
-                game.board.handleCustomMessage(aThis);
+                game.variant.handleCustomMessage(aThis);
                 for (Socket s : game.getPlayers()) {
-                    server.sendMessage(s, new ThisIsTheBoardMessage(game.board));
+                    server.sendMessage(s, new ThisIsTheBoardMessage(game.getBoard()));
                 }
             }
         }

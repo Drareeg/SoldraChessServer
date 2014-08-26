@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 package Shared.Networking;
-import Shared.Chess.Variants.Board;
+import Domain.Chess.Board;
 
 /**
  *

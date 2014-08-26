@@ -21,27 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Chess.Variants;
+package Shared.Chess;
+import java.io.Serializable;
 
 /**
  *
  * @author Geerard
  */
-public enum Variant {
+public class Position implements Serializable {
 
-    ATTRACT("Attract"),
-    TORNADO("Tornado"),
-    HIDDENQUEEN("Hidden Queen"),
-    CLASSIC("Classic");
+    private ChessPiece[][] model;
 
-    private String name;
-
-    Variant(String name) {
-        this.name = name;
+    public Position() {
+        model = new ChessPiece[8][8];
     }
 
-    public String getName() {
-        return name;
+    public ChessPiece[][] getModel() {
+        return model;
+    }
+
+    public boolean setPiece(int row, int col, ChessPiece piece) {
+        return this.setPiece(new Coordinate(row, col), piece);
+    }
+
+    public boolean setPiece(Coordinate coord, ChessPiece piece) {
+        boolean hadAPiece = hasPiece(coord);
+        model[coord.getRow()][coord.getCol()] = piece;
+        return hadAPiece;
+    }
+
+    public boolean removePiece(Coordinate coord) {
+        return setPiece(coord, null);
+    }
+
+    public ChessPiece getPiece(Coordinate coord) {
+        return model[coord.getRow()][coord.getCol()];
+    }
+
+    public boolean hasPiece(Coordinate coord) {
+        return getPiece(coord) != null;
+    }
+
+    public boolean isValidCoordinate(Coordinate coord) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

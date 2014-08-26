@@ -22,8 +22,9 @@
  * THE SOFTWARE.
  */
 package Shared.Chess;
+import Domain.Chess.Board;
 import static Shared.Chess.ChessPiece.images;
-import Shared.Chess.Variants.Board;
+import Domain.Chess.Variants.NormalChess;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
 
@@ -58,7 +59,8 @@ public class HiddenQueen extends ChessPiece {
         }
     }
 
-    //wordt gebruikt voor eigen mat
+    //wordt gebruikt voor te kijken of je zelf mat staat
+    @Override
     public ArrayList<Coordinate> getReachableCoords(Coordinate pieceLocation, Board board) {
         return queen.getReachableCoords(pieceLocation, board);
     }
@@ -80,12 +82,7 @@ public class HiddenQueen extends ChessPiece {
             System.out.println("QUEEN DISCOVERED");
             discovered = true;
         }
-        int fromRow = fromCoord.getRow();
-        int fromCol = fromCoord.getCol();
-        int toRow = toCoord.getRow();
-        int toCol = toCoord.getCol();
-        b.getModel()[toRow][toCol] = b.getModel()[fromRow][fromCol];
-        b.getModel()[fromRow][fromCol] = null;
+        super.executeMove(fromCoord, toCoord, b);
     }
 
 }

@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 package Shared.Networking;
-import Shared.Chess.Variants.Variant;
+import Domain.Chess.Variants.Variant;
 
 /**
  * S -> C: a new game started for you

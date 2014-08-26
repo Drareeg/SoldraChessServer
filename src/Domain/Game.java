@@ -23,8 +23,9 @@
  */
 package Domain;
 
+import Domain.Chess.Board;
 import Networking.Server;
-import Shared.Chess.Variants.Board;
+import Domain.Chess.Variants.NormalChess;
 import Shared.Chess.Coordinate;
 import Shared.Networking.GameFinishedMessage;
 import Shared.Networking.TurnMessage;
@@ -39,20 +40,22 @@ class Game {
 
     Socket player1;
     Socket player2;
-    Board board;
+    NormalChess variant;
     Server server;
     int turn = 0;
+    private Board board;
 
     //idee dat ergens moet staan, vast niet hier. hopelijk lees ik het nog eens
     //ipv bij promotie auto dame/laten kiezen, tijdens de match in de GUI reeds kunnen aanduiden wat de volgende promotie moet zijn.
-    public Game(Socket player1, Socket player2, Server server, Board board) {
+    public Game(Socket player1, Socket player2, Server server, NormalChess variant) {
         this.server = server;
         this.player1 = player1;
         this.player2 = player2;
         if (player1 == player2) {
             System.out.println("DAFUQ, da meende nu toch niet.");
         }
-        this.board = board;
+        this.variant = variant;
+        board = variant.getBoard();
     }
 
     public void start() {
@@ -65,14 +68,14 @@ class Game {
 
     void movePieceIfAllowed(Coordinate fromCoord, Coordinate toCoord) {
         //nog checken of het command komt van dienen aan de beurt, en of dat een stuk is van hem
-        if (board.isMoveAllowed(fromCoord, toCoord)) {
-            boolean playerIsWhite = board.getPiece(fromCoord).isWhite;
-            board.movePiece(fromCoord, toCoord);
-            if (board.isMate(!playerIsWhite)) {
+        if (variant.isMoveAllowed(fromCoord, toCoord)) {
+            boolean playerIsWhite = board.getPiece(fromCoord).isWhite();
+            variant.movePiece(fromCoord, toCoord);
+            if (variant.isLost(!playerIsWhite)) {
                 gameWon(turn == 0);
                 return;
             }
-            if (board.isStaleMate(!playerIsWhite)) {
+            if (variant.isStaleMated(!playerIsWhite)) {
                 gameDrawed();
                 return;
             }
@@ -94,8 +97,9 @@ class Game {
     //TODO afgehandelde games nog verwijderen uit gamemeneger (met een callback)
     public void gameWon(boolean player1Won) {
         Socket winner = player1Won ? player1 : player2;
-        server.sendMessage(player1, new GameFinishedMessage(1));
-        server.sendMessage(player2, new GameFinishedMessage(0));
+        Socket loser = player1Won ? player2 : player1;
+        server.sendMessage(winner, new GameFinishedMessage(1));
+        server.sendMessage(loser, new GameFinishedMessage(0));
     }
 
     public void gameDrawed() {
@@ -106,6 +110,10 @@ class Game {
 
     Socket getOtherPlayer(Socket source) {
         return player1 == source ? player2 : player1;
+    }
+
+    public Board getBoard() {
+        return board;
     }
 
 }

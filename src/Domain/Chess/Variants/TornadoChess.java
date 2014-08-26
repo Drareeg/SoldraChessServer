@@ -21,43 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Chess.Variants;
-import Shared.Chess.HiddenQueen;
-import Shared.Networking.Message;
-import Shared.Networking.ThisIsMyHiddenQueenMessage;
+package Domain.Chess.Variants;
+import Shared.Chess.ChessPiece;
+import Shared.Chess.Coordinate;
 
 /**
  *
  * @author Geerard
  */
-public class HiddenQueenBoard extends Board {
-
-    boolean hasWhiteChoosenQueen;
-    boolean hasBlackChoosenQueen;
-
+public class TornadoChess extends NormalChess {
     @Override
-    public void handleCustomMessage(Message message) {
-        if (message instanceof ThisIsMyHiddenQueenMessage) {
-            ThisIsMyHiddenQueenMessage qMessage = (ThisIsMyHiddenQueenMessage) message;
-            model[qMessage.isSentByWhite() ? 6 : 1][qMessage.getCol()] = new HiddenQueen(qMessage.isSentByWhite());
-            if (qMessage.isSentByWhite()) {
-                hasWhiteChoosenQueen = true;
-            } else {
-                hasBlackChoosenQueen = true;
-            }
-        }
-        super.fireChanged();
+    public void postMove(Coordinate fromCoord, Coordinate toCoord) {
+        tornado();
     }
 
-    public boolean hasChosenQueen(boolean amIWhite) {
-        return amIWhite ? hasWhiteChoosenQueen : hasBlackChoosenQueen;
+    private void tornado() {
+        ChessPiece temp = board.getPiece(new Coordinate(3, 3));
+        board.setPiece(new Coordinate(3, 3), board.getPiece(new Coordinate(4, 3)));
+        board.setPiece(new Coordinate(4, 3), board.getPiece(new Coordinate(4, 4)));
+        board.setPiece(new Coordinate(4, 4), board.getPiece(new Coordinate(3, 4)));
+        board.setPiece(new Coordinate(3, 4), temp);
     }
-
-    public void updateTo(Board board) {
-        hasWhiteChoosenQueen = ((HiddenQueenBoard) board).hasWhiteChoosenQueen;
-        hasBlackChoosenQueen = ((HiddenQueenBoard) board).hasBlackChoosenQueen;
-        this.model = board.model;
-        fireChanged();
-    }
-
 }

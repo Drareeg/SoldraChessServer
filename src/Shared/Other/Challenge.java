@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 package Shared.Other;
-import Shared.Chess.Variants.Variant;
+import Domain.Chess.Variants.Variant;
 import java.io.Serializable;
 
 /**

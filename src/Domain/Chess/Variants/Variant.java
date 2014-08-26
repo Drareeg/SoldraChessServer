@@ -21,25 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Chess.Variants;
-import Shared.Chess.ChessPiece;
-import Shared.Chess.Coordinate;
+package Domain.Chess.Variants;
 
 /**
  *
  * @author Geerard
  */
-public class TornadoBoard extends Board {
-    @Override
-    public void postMove(Coordinate fromCoord, Coordinate toCoord) {
-        tornado();
+public enum Variant {
+
+    ATTRACT("Attract"),
+    TORNADO("Tornado"),
+    HIDDENQUEEN("Hidden Queen"),
+    CLASSIC("Classic");
+
+    private String name;
+
+    Variant(String name) {
+        this.name = name;
     }
 
-    private void tornado() {
-        ChessPiece temp = model[3][3];
-        model[3][3] = model[4][3];
-        model[4][3] = model[4][4];
-        model[4][4] = model[3][4];
-        model[3][4] = temp;
+    public String getName() {
+        return name;
     }
+
 }
