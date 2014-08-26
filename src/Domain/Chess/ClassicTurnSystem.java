@@ -21,32 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Domain;
-import Domain.Chess.PositionJuror;
-import Domain.Chess.TurnSystem;
-import Shared.Chess.Board;
+package Domain.Chess;
 import java.net.Socket;
 
 /**
  *
  * @author Geerard
  */
-public class IncrementingTurnSystem extends TurnSystem {
+public class ClassicTurnSystem extends TurnSystem {
 
-    PositionJuror positionJuror;
-    private int turnsLeft = 1;
-    private int lastPlayerGotXTurns = 1;
-    private boolean whitePlaying;
-    private Board board;
+    int turn = 1;
 
-    public IncrementingTurnSystem(PositionJuror positionJuror, Board board) {
-        this.positionJuror = positionJuror;
-        this.board = board;
+    @Override
+    public void nextTurn() {
+        turn++;
     }
 
     @Override
     public Socket getWhoseTurn() {
-        if (whitePlaying) {
+        if (turn % 2 == 0) {
             return white;
         } else {
             return black;
@@ -55,21 +48,10 @@ public class IncrementingTurnSystem extends TurnSystem {
 
     @Override
     public Socket getNotWhoseTurn() {
-        if (!whitePlaying) {
+        if (turn % 2 != 0) {
             return white;
         } else {
             return black;
-        }
-    }
-
-    @Override
-    public void nextTurn() {
-        turnsLeft--;
-        //als je beurten op zijn of als je de tegenstander schaak hebt gezet gaat de beurt door
-        if (turnsLeft == 0 || positionJuror.isInCheck(board, whitePlaying)) {
-            whitePlaying = !whitePlaying;
-            lastPlayerGotXTurns++;
-            turnsLeft = lastPlayerGotXTurns;
         }
     }
 

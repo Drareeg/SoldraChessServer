@@ -23,7 +23,7 @@
  */
 package Domain.Chess.Variants;
 import Domain.Chess.TurnSystem;
-import Domain.IncrementingTurnSystem;
+import Domain.Chess.IncrementingTurnSystem;
 
 /**
  *

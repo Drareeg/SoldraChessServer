@@ -23,6 +23,7 @@
  */
 package Shared.Chess;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  *
@@ -83,6 +84,21 @@ public class Board implements Serializable {
 
     public Position getPosition() {
         return position;
+    }
+
+    boolean underAttack(Coordinate coordinate, boolean attackerIsWhite) {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Coordinate testCoord = new Coordinate(row, col);
+                ChessPiece testPiece = position.getPiece(testCoord);
+                if (testPiece != null && testPiece.isWhite() == attackerIsWhite) {
+                    if (testPiece.canReachFromTo(coordinate, coordinate, this)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

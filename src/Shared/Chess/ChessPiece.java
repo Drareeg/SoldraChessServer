@@ -53,7 +53,7 @@ public abstract class ChessPiece implements Serializable {
         return this.isWhite == piece.isWhite;
     }
 
-    public boolean canMoveFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
+    public boolean canReachFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
         for (List<Coordinate> coordList : possibleMovesListList) {
             for (Coordinate diffCoord : coordList) {
                 Coordinate testCoord = diffCoord.add(fromCoord);
@@ -103,7 +103,7 @@ public abstract class ChessPiece implements Serializable {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 Coordinate tryToReachThisCoord = new Coordinate(row, col);
-                if (canMoveFromTo(pieceLocation, tryToReachThisCoord, board)) {
+                if (canReachFromTo(pieceLocation, tryToReachThisCoord, board)) {
                     reachableFields.add(tryToReachThisCoord);
                 }
             }

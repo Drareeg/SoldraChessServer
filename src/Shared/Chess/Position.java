@@ -23,6 +23,7 @@
  */
 package Shared.Chess;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  *

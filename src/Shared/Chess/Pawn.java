@@ -47,7 +47,7 @@ public class Pawn extends ChessPiece {
     }
 
     @Override
-    public boolean canMoveFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
+    public boolean canReachFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
         //vakje ervoor & leeg
         Coordinate testCoord = fromCoord.add(forward);
         boolean vakErvoorLeeg = !board.hasPiece(testCoord);
@@ -85,9 +85,6 @@ public class Pawn extends ChessPiece {
 
     @Override
     public ArrayList<ChessPiece> getAttackedPieces(Board board, Coordinate pieceLocation) {
-        if (pieceLocation.getRow() == 4) {
-            forward = forward;
-        }
         ArrayList<ChessPiece> attackedPieces = new ArrayList();
         Coordinate testCoord = rightFront.add(pieceLocation);
         if (board.isValidCoordinate(testCoord)) {
@@ -110,5 +107,13 @@ public class Pawn extends ChessPiece {
     @Override
     public Image getImage(boolean amIWhite) {
         return new Image(images.get("Pawn" + (this.isWhite ? "W" : "B")));
+    }
+
+    @Override
+    public void executeMove(Coordinate fromCoord, Coordinate toCoord, Board b) {
+        super.executeMove(fromCoord, toCoord, b);
+        if (toCoord.getRow() == 7 || toCoord.getRow() == 0) {
+            b.setPiece(toCoord, new Queen(isWhite));
+        }
     }
 }

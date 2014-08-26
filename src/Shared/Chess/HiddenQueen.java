@@ -43,8 +43,8 @@ public class HiddenQueen extends ChessPiece {
     }
 
     @Override
-    public boolean canMoveFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
-        return queen.canMoveFromTo(fromCoord, toCoord, board);
+    public boolean canReachFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
+        return queen.canReachFromTo(fromCoord, toCoord, board);
     }
 
     //als we nog nie ontdekt zijn, willen we niet dat onze schaak via dame reeds ontdekt wordt
@@ -76,7 +76,7 @@ public class HiddenQueen extends ChessPiece {
 
     @Override
     public void executeMove(Coordinate fromCoord, Coordinate toCoord, Board b) {
-        if (!discovered && !pawn.canMoveFromTo(fromCoord, toCoord, b)) {
+        if (!discovered && !pawn.canReachFromTo(fromCoord, toCoord, b)) {
             System.out.println("QUEEN DISCOVERED");
             discovered = true;
         }

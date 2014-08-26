@@ -66,4 +66,84 @@ public class King extends ChessPiece {
         return new Image(images.get("King" + (this.isWhite ? "W" : "B")));
     }
 
+    @Override
+    public boolean canReachFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
+        if (super.canReachFromTo(fromCoord, toCoord, board)) {
+            return true;
+        } else {
+            if (isCastleShort(toCoord)) {
+                return canCastleLong(board);
+            }
+            if (isCastleLong(toCoord)) {
+                return canCastleShort(board);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void executeMove(Coordinate fromCoord, Coordinate toCoord, Board board) {
+        if (isCastleLong(toCoord)) {
+            int row = isWhite ? 7 : 0;
+            Coordinate rookCoord = new Coordinate(row, 0);
+            board.getPiece(rookCoord).executeMove(rookCoord, new Coordinate(row, 3), board);
+        } else if (isCastleShort(toCoord)) {
+            int row = isWhite ? 7 : 0;
+            Coordinate rookCoord = new Coordinate(row, 7);
+            board.getPiece(rookCoord).executeMove(rookCoord, new Coordinate(row, 5), board);
+        }
+        super.executeMove(fromCoord, toCoord, board);
+    }
+
+    private boolean isCastleShort(Coordinate toCoord) {
+        return !hasMoved && toCoord.getCol() == 6;
+    }
+
+    private boolean isCastleLong(Coordinate toCoord) {
+        return !hasMoved && toCoord.getCol() == 2;
+    }
+
+    private boolean canCastleLong(Board board) {
+        int row = isWhite ? 7 : 0;
+        ChessPiece rook = board.getPiece(new Coordinate(row, 0));
+        if (hasMoved || rook == null || rook.hasMoved) {
+            return false;
+        }
+        Coordinate[] hasToBeEmpty = new Coordinate[]{new Coordinate(row, 1), new Coordinate(row, 2), new Coordinate(row, 3)};
+        for (Coordinate coordinate : hasToBeEmpty) {
+            if (board.hasPiece(coordinate)) {
+                return false;
+            }
+        }
+        //king is nog allowed to pass in check chess, nor be in check when starting castling
+        Coordinate[] kingPassesHere = new Coordinate[]{new Coordinate(row, 2), new Coordinate(row, 3), new Coordinate(row, 4)};
+        for (Coordinate coordinate : kingPassesHere) {
+            if (board.underAttack(coordinate, !isWhite)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean canCastleShort(Board board) {
+        int row = isWhite ? 7 : 0;
+        ChessPiece rook = board.getPiece(new Coordinate(row, 7));
+        if (hasMoved || rook == null || rook.hasMoved) {
+            return false;
+        }
+        Coordinate[] hasToBeEmpty = new Coordinate[]{new Coordinate(row, 5), new Coordinate(row, 6)};
+        for (Coordinate coordinate : hasToBeEmpty) {
+            if (board.hasPiece(coordinate)) {
+                return false;
+            }
+        }
+        //king is nog allowed to pass in check chess, nor be in check when starting castling
+        Coordinate[] kingPassesHere = new Coordinate[]{new Coordinate(row, 4), new Coordinate(row, 5), new Coordinate(row, 6)};
+        for (Coordinate coordinate : kingPassesHere) {
+            if (board.underAttack(coordinate, !isWhite)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

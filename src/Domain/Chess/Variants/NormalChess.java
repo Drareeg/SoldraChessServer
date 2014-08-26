@@ -25,7 +25,7 @@ package Domain.Chess.Variants;
 import Shared.Chess.Board;
 import Domain.Chess.PositionJuror;
 import Domain.Chess.TurnSystem;
-import Domain.ClassicTurnSystem;
+import Domain.Chess.ClassicTurnSystem;
 import Shared.Chess.Coordinate;
 import Shared.Networking.Message;
 
@@ -54,7 +54,11 @@ public class NormalChess {
     //tja
     public boolean isMoveAllowed(Coordinate fromCoord, Coordinate toCoord) {
         if (!board.isValidCoordinate(fromCoord) || !board.isValidCoordinate(toCoord) || toCoord.equals(fromCoord) || !board.hasPiece(fromCoord)) {
-            System.out.println("move not allowed bacause invalid coord");
+            System.out.println("move not allowed bacause invalid coord  " + fromCoord + " " + toCoord);
+            return false;
+        }
+        //TODO: kijken of dat stuk wel aan zet is ook, en of de message komt van die speler (mss dat hogerop controleren)
+        if (!board.getPiece(fromCoord).canReachFromTo(fromCoord, toCoord, board)) {
             return false;
         }
         //maak een backup van de huidige stand van zaken, voer de zet uit, controleer of we nu een geldige state hebben, doe een recover naar de backup
