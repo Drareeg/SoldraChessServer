@@ -26,8 +26,9 @@ import Networking.Server;
 import Domain.Chess.Variants.AttractChess;
 import Domain.Chess.Variants.NormalChess;
 import Domain.Chess.Variants.HiddenQueenChess;
+import Domain.Chess.Variants.OneTwoThreeChess;
 import Domain.Chess.Variants.TornadoChess;
-import Domain.Chess.Variants.Variant;
+import Shared.Chess.Variant;
 import Shared.Networking.AcceptChallengeMessage;
 import Shared.Networking.GameFinishedMessage;
 import Shared.Networking.GameStartMessage;
@@ -59,9 +60,10 @@ public class GameManager {
     public void handleMove(MoveMessage moveMessage) {
         for (Game game : games) {
             if (game.hasPlayer(moveMessage.getSource())) {
-                game.movePieceIfAllowed(moveMessage.getFromCoord(), moveMessage.getToCoord());
-                for (Socket s : game.getPlayers()) {
-                    server.sendMessage(s, new ThisIsTheBoardMessage(game.getBoard()));
+                if (game.movePieceIfAllowed(moveMessage.getFromCoord(), moveMessage.getToCoord())) {
+                    for (Socket s : game.getPlayers()) {
+                        server.sendMessage(s, new ThisIsTheBoardMessage(game.getBoard()));
+                    }
                 }
             }
         }
@@ -77,23 +79,28 @@ public class GameManager {
         }
         Variant v = aThis.getChallenge().getVariant();
         //TODO: board/game logisch onderverdelen nu varianten ontstaan
-        NormalChess board = null;
+        NormalChess variant = null;
         if (v.equals(Variant.ATTRACT)) {
-            board = new AttractChess();
+            variant = new AttractChess();
         }
         if (v.equals(Variant.HIDDENQUEEN)) {
-            board = new HiddenQueenChess();
+            variant = new HiddenQueenChess();
         }
         if (v.equals(Variant.TORNADO)) {
-            board = new TornadoChess();
+            variant = new TornadoChess();
         }
         if (v.equals(Variant.CLASSIC)) {
-            board = new NormalChess();
+            variant = new NormalChess();
         }
-        Game game = new Game(p1, p2, server, board);
+        if (v.equals(Variant.ONETWOTHREE)) {
+            variant = new OneTwoThreeChess();
+        }
+        Game game = new Game(p1, p2, server, variant);
         games.add(game);
         server.sendMessage(p1, new GameStartMessage(false, server.getUserNameFromSocket(p2), v)); //wit
         server.sendMessage(p2, new GameStartMessage(true, aThis.getChallenge().getOrigin(), v)); //zwart
+        server.sendMessage(p1, new ThisIsTheBoardMessage(variant.getBoard()));
+        server.sendMessage(p2, new ThisIsTheBoardMessage(variant.getBoard()));
         game.start();
     }
 

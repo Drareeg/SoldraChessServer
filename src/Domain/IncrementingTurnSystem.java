@@ -21,28 +21,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Networking;
+package Domain;
+import Domain.Chess.PositionJuror;
+import Domain.Chess.TurnSystem;
 import Shared.Chess.Board;
+import java.net.Socket;
 
 /**
  *
  * @author Geerard
  */
-public class ThisIsTheBoardMessage extends Message {
+public class IncrementingTurnSystem extends TurnSystem {
 
+    PositionJuror positionJuror;
+    private int turnsLeft = 1;
+    private int lastPlayerGotXTurns = 1;
+    private boolean whitePlaying;
     private Board board;
 
-    public ThisIsTheBoardMessage(Board currentBoard) {
-        this.board = currentBoard;
+    public IncrementingTurnSystem(PositionJuror positionJuror, Board board) {
+        this.positionJuror = positionJuror;
+        this.board = board;
     }
 
     @Override
-    public void handleSelf(MessageHandler m) {
-        m.handleThisIsTheBoard(this);
+    public Socket getWhoseTurn() {
+        if (whitePlaying) {
+            return white;
+        } else {
+            return black;
+        }
     }
 
-    public Board getBoard() {
-        return board;
+    @Override
+    public Socket getNotWhoseTurn() {
+        if (!whitePlaying) {
+            return white;
+        } else {
+            return black;
+        }
+    }
+
+    @Override
+    public void nextTurn() {
+        turnsLeft--;
+        //als je beurten op zijn of als je de tegenstander schaak hebt gezet gaat de beurt door
+        if (turnsLeft == 0 || positionJuror.isInCheck(board, whitePlaying)) {
+            whitePlaying = !whitePlaying;
+            lastPlayerGotXTurns++;
+            turnsLeft = lastPlayerGotXTurns;
+        }
     }
 
 }

@@ -21,22 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Domain.Chess;
-import Shared.Chess.Bishop;
-import Shared.Chess.ChessPiece;
-import Shared.Chess.Coordinate;
-import Shared.Chess.King;
-import Shared.Chess.Knight;
-import Shared.Chess.Pawn;
-import Shared.Chess.Position;
-import Shared.Chess.Queen;
-import Shared.Chess.Rook;
+package Shared.Chess;
+import java.io.Serializable;
 
 /**
  *
  * @author Geerard
  */
-public class Board {
+public class Board implements Serializable {
     private Position position;
 
     //mergen met Position ...?
@@ -64,6 +56,11 @@ public class Board {
         }
     }
 
+    //copy constructor
+    private Board(Board board) {
+        position = new Position(board.getPosition());
+    }
+
     public boolean isValidCoordinate(Coordinate coord) {
         return position.isValidCoordinate(coord);
     }
@@ -73,7 +70,7 @@ public class Board {
     }
 
     public Board getDeepCopy() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new Board(this);
     }
 
     public void setPiece(Coordinate coordinate, ChessPiece piece) {
@@ -83,4 +80,9 @@ public class Board {
     public boolean hasPiece(Coordinate coord) {
         return position.hasPiece(coord);
     }
+
+    public Position getPosition() {
+        return position;
+    }
+
 }

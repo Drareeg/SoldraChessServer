@@ -36,6 +36,15 @@ public class Position implements Serializable {
         model = new ChessPiece[8][8];
     }
 
+    Position(Position position) {
+        model = new ChessPiece[8][8];
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                model[row][col] = position.model[row][col]; //TODO: ook een deep copy pakken via model[][].getDeepCopy();
+            }
+        }
+    }
+
     public ChessPiece[][] getModel() {
         return model;
     }
@@ -63,7 +72,7 @@ public class Position implements Serializable {
     }
 
     public boolean isValidCoordinate(Coordinate coord) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return coord.getCol() <= 7 && coord.getCol() >= 0 && coord.getRow() <= 7 && coord.getRow() >= 0;
     }
 
 }

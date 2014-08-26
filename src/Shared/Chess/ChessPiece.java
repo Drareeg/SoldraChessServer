@@ -22,8 +22,6 @@
  * THE SOFTWARE.
  */
 package Shared.Chess;
-import Domain.Chess.Board;
-import Domain.Chess.Variants.NormalChess;
 import UI.SoldraChess;
 import java.io.Serializable;
 import java.util.ArrayList;

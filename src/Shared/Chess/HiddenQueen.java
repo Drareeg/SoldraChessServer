@@ -22,9 +22,7 @@
  * THE SOFTWARE.
  */
 package Shared.Chess;
-import Domain.Chess.Board;
 import static Shared.Chess.ChessPiece.images;
-import Domain.Chess.Variants.NormalChess;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
 

@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  */
 package Domain.Chess;
+import Shared.Chess.Board;
 import Domain.Chess.Variants.NormalChess;
 import Shared.Chess.ChessPiece;
 import Shared.Chess.Coordinate;
@@ -31,20 +32,21 @@ import Shared.Chess.King;
  *
  * @author Geerard
  */
+//TODO aanmaken met een reference naar Board ipv altijd mee te geven ... -> dan ook incrementingturnsystem zo veranderen
 public class PositionJuror {
 
     //ook oude versie meegeven? bv in geval van weggeefschaak is nodig om te weten wat voorgaande stukkentelling was -> naah oplossen door overschrijven in weggeefschaak
-    public boolean isValid(Board board, boolean whiteToPlay) {
-        return isInCheck(board, whiteToPlay);
+    public boolean isValid(Board board, boolean lastPlayedIsWhite) {
+        return !isInCheck(board, lastPlayedIsWhite);
     }
 
-    private boolean isInCheck(Board board, boolean white) { //is white/black in check
+    public boolean isInCheck(Board board, boolean lastPlayedIsWhite) { //is white/black in check
         for (int row = 0; row < 7; row++) {
             for (int col = 0; col < 7; col++) {
                 ChessPiece piece = board.getPiece(new Coordinate(row, col));
-                if (piece != null && piece.isWhite != white) { //je kan enkel schaak staan door enemy stukken
+                if (piece != null && piece.isWhite != lastPlayedIsWhite) { //je kan enkel schaak staan door enemy stukken
                     for (ChessPiece attackedPiece : piece.getAttackedPieces(board, new Coordinate(row, col))) {
-                        if (attackedPiece instanceof King && attackedPiece.isWhite == white) {
+                        if (attackedPiece instanceof King && attackedPiece.isWhite == lastPlayedIsWhite) {
                             System.out.println("isincheck");
                             return true;
                         }

@@ -23,7 +23,8 @@
  */
 package Domain;
 
-import Domain.Chess.Board;
+import Domain.Chess.TurnSystem;
+import Shared.Chess.Board;
 import Networking.Server;
 import Domain.Chess.Variants.NormalChess;
 import Shared.Chess.Coordinate;
@@ -44,6 +45,7 @@ class Game {
     Server server;
     int turn = 0;
     private Board board;
+    private TurnSystem turnSystem;
 
     //idee dat ergens moet staan, vast niet hier. hopelijk lees ik het nog eens
     //ipv bij promotie auto dame/laten kiezen, tijdens de match in de GUI reeds kunnen aanduiden wat de volgende promotie moet zijn.
@@ -56,32 +58,36 @@ class Game {
         }
         this.variant = variant;
         board = variant.getBoard();
+        turnSystem = variant.getTurnSystem();
+        turnSystem.setPlayer1(player1);
+        turnSystem.setPlayer2(player2);
     }
 
     public void start() {
-        nextTurn();
+        sendTurnMessages();
     }
 
     boolean hasPlayer(Socket source) {
         return player1 == source || player2 == source;
     }
 
-    void movePieceIfAllowed(Coordinate fromCoord, Coordinate toCoord) {
+    boolean movePieceIfAllowed(Coordinate fromCoord, Coordinate toCoord) {
+        boolean wasAllowed = variant.isMoveAllowed(fromCoord, toCoord);
+        //TODO niet meer nodig als isMoveallowed werkt op de copy
+        board = variant.getBoard();
         //nog checken of het command komt van dienen aan de beurt, en of dat een stuk is van hem
-        if (variant.isMoveAllowed(fromCoord, toCoord)) {
+        if (wasAllowed) {
             boolean playerIsWhite = board.getPiece(fromCoord).isWhite();
             variant.movePiece(fromCoord, toCoord);
             if (variant.isLost(!playerIsWhite)) {
                 gameWon(turn == 0);
-                return;
-            }
-            if (variant.isStaleMated(!playerIsWhite)) {
+            } else if (variant.isStaleMated(!playerIsWhite)) {
                 gameDrawed();
-                return;
+            } else {
+                nextTurn();
             }
-            nextTurn();
         }
-        //later variantlogica in deze klasse, en hier ook
+        return wasAllowed;
     }
 
     Iterable<Socket> getPlayers() {
@@ -89,9 +95,8 @@ class Game {
     }
 
     private void nextTurn() {
-        turn = (turn + 1) % 2;
-        server.sendMessage(player1, new TurnMessage(turn == 0));
-        server.sendMessage(player2, new TurnMessage(turn != 0));
+        turnSystem.nextTurn();
+        sendTurnMessages();
     }
 
     //TODO afgehandelde games nog verwijderen uit gamemeneger (met een callback)
@@ -114,6 +119,11 @@ class Game {
 
     public Board getBoard() {
         return board;
+    }
+
+    private void sendTurnMessages() {
+        server.sendMessage(turnSystem.getWhoseTurn(), new TurnMessage(true));
+        server.sendMessage(turnSystem.getNotWhoseTurn(), new TurnMessage(false));
     }
 
 }

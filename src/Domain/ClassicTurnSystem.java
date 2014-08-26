@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Drareeg.
+ * Copyright 2014 Dries Weyme & Geerard Ponnet.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,41 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Networking;
-import Shared.Chess.Variant;
+package Domain;
+import Domain.Chess.TurnSystem;
+import java.net.Socket;
 
 /**
- * S -> C: a new game started for you
  *
- * @author Drareeg
+ * @author Geerard
  */
-public class GameStartMessage extends Message {
+public class ClassicTurnSystem extends TurnSystem {
 
-    boolean amIWhite;
-    String againstName;
-    Variant variant;
+    int turn = 0;
 
-    public GameStartMessage(boolean amIWhite, String againstName, Variant variant) {
-        this.amIWhite = amIWhite;
-        this.againstName = againstName;
-        this.variant = variant;
-    }
-
-    public boolean AmIWhite() {
-        return amIWhite;
-    }
-
-    public String getAgainstName() {
-        return againstName;
-    }
-
-    public Variant getVariant() {
-        return variant;
+    @Override
+    public void nextTurn() {
+        turn++;
     }
 
     @Override
-    public void handleSelf(MessageHandler m) {
-        m.handleGameStart(this);
+    public Socket getWhoseTurn() {
+        if (turn % 2 == 0) {
+            return white;
+        } else {
+            return black;
+        }
+    }
+
+    @Override
+    public Socket getNotWhoseTurn() {
+        if (turn % 2 != 0) {
+            return white;
+        } else {
+            return black;
+        }
     }
 
 }

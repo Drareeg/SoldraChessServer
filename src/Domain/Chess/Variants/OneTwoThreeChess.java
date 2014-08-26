@@ -22,26 +22,17 @@
  * THE SOFTWARE.
  */
 package Domain.Chess.Variants;
+import Domain.Chess.TurnSystem;
+import Domain.IncrementingTurnSystem;
 
 /**
  *
  * @author Geerard
  */
-public enum Variant {
+public class OneTwoThreeChess extends NormalChess {
 
-    ATTRACT("Attract"),
-    TORNADO("Tornado"),
-    HIDDENQUEEN("Hidden Queen"),
-    CLASSIC("Classic");
-
-    private String name;
-
-    Variant(String name) {
-        this.name = name;
+    @Override
+    public TurnSystem getTurnSystem() {
+        return new IncrementingTurnSystem(positionJuror, board);
     }
-
-    public String getName() {
-        return name;
-    }
-
 }

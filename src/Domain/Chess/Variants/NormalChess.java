@@ -22,8 +22,10 @@
  * THE SOFTWARE.
  */
 package Domain.Chess.Variants;
-import Domain.Chess.Board;
+import Shared.Chess.Board;
 import Domain.Chess.PositionJuror;
+import Domain.Chess.TurnSystem;
+import Domain.ClassicTurnSystem;
 import Shared.Chess.Coordinate;
 import Shared.Networking.Message;
 
@@ -37,6 +39,7 @@ public class NormalChess {
 
     public NormalChess() {
         positionJuror = new PositionJuror();
+        board = new Board();
     }
 
     public void movePiece(Coordinate fromCoord, Coordinate toCoord) {
@@ -46,16 +49,22 @@ public class NormalChess {
         postMove(fromCoord, toCoord);
     }
 
+    //opgepast, als andere klassen een reference hebben naar het board, dan poept deze methode die klassen
+    //beter toch testen op de copy ipv op dit bord. dat veranderen zou minder lang geduurd hebben dan deze comment
+    //tja
     public boolean isMoveAllowed(Coordinate fromCoord, Coordinate toCoord) {
-        if (!board.isValidCoordinate(fromCoord) || !board.isValidCoordinate(toCoord)) {
+        if (!board.isValidCoordinate(fromCoord) || !board.isValidCoordinate(toCoord) || toCoord.equals(fromCoord) || !board.hasPiece(fromCoord)) {
+            System.out.println("move not allowed bacause invalid coord");
             return false;
         }
         //maak een backup van de huidige stand van zaken, voer de zet uit, controleer of we nu een geldige state hebben, doe een recover naar de backup
         boolean isAllowed;
-        Board boardBackup = this.board.getDeepCopy();
+        Board boardBackup = this.board;
+        Board boardCopy = this.board.getDeepCopy();
+        this.board = boardCopy;
         boolean playerIsWhite = board.getPiece(fromCoord).isWhite();
         movePiece(fromCoord, toCoord);
-        isAllowed = positionJuror.isValid(board, !playerIsWhite);
+        isAllowed = positionJuror.isValid(board, playerIsWhite);
         board = boardBackup;
         return isAllowed;
     }
@@ -83,5 +92,9 @@ public class NormalChess {
     //in principe kan er nog een abstracte klasse boven normalchess met de methoden isvalidcoordinate, isstalmated, getpiece ....
     public Board getBoard() {
         return board;
+    }
+
+    public TurnSystem getTurnSystem() {
+        return new ClassicTurnSystem();
     }
 }
