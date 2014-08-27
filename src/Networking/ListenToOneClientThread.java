@@ -57,7 +57,7 @@ public class ListenToOneClientThread extends Thread {
         }
         //als de streams goed geinit zijn -> beginnen luisteren naar de ois
         int timesNoConnection = 0;
-        while (timesNoConnection < 50) {
+        while (timesNoConnection < 2) {
             try {
                 Object incoming = ois.readObject();
                 timesNoConnection = 0;

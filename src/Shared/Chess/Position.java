@@ -23,7 +23,6 @@
  */
 package Shared.Chess;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  *
@@ -31,7 +30,7 @@ import java.util.ArrayList;
  */
 public class Position implements Serializable {
 
-    private ChessPiece[][] model;
+    protected ChessPiece[][] model;
 
     public Position() {
         model = new ChessPiece[8][8];
@@ -72,6 +71,7 @@ public class Position implements Serializable {
         return getPiece(coord) != null;
     }
 
+    //hoort eerder bij board denk ik (board en position mergen imo)
     public boolean isValidCoordinate(Coordinate coord) {
         return coord.getCol() <= 7 && coord.getCol() >= 0 && coord.getRow() <= 7 && coord.getRow() >= 0;
     }

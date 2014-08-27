@@ -24,6 +24,7 @@
 package Domain;
 import Networking.Server;
 import Domain.Chess.Variants.AttractChess;
+import Domain.Chess.Variants.CilinderChess;
 import Domain.Chess.Variants.NormalChess;
 import Domain.Chess.Variants.HiddenQueenChess;
 import Domain.Chess.Variants.OneTwoThreeChess;
@@ -94,6 +95,9 @@ public class GameManager {
         }
         if (v.equals(Variant.ONETWOTHREE)) {
             variant = new OneTwoThreeChess();
+        }
+        if (v.equals(Variant.CILINDER)) {
+            variant = new CilinderChess();
         }
         Game game = new Game(p1, p2, server, variant);
         games.add(game);

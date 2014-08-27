@@ -49,13 +49,13 @@ public class Pawn extends ChessPiece {
     @Override
     public boolean canReachFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
         //vakje ervoor & leeg
-        Coordinate testCoord = fromCoord.add(forward);
+        Coordinate testCoord = board.adjustToBoard(fromCoord.add(forward));
         boolean vakErvoorLeeg = board.isValidCoordinate(testCoord) && !board.hasPiece(testCoord);
         if (toCoord.equals(testCoord) && vakErvoorLeeg) {
             return true;
         }
         //niet begwogen & 2 vakken ervoor
-        testCoord = fromCoord.add(twoForward);
+        testCoord = board.adjustToBoard(fromCoord.add(twoForward));
         if (board.isValidCoordinate(testCoord)) {
             boolean tweeVakkenErvoorLeeg = !board.hasPiece(testCoord);
             if (!hasMoved && toCoord.equals(testCoord) && vakErvoorLeeg && tweeVakkenErvoorLeeg && (fromCoord.getRow() == 1 || fromCoord.getRow() == 6)) {
@@ -63,7 +63,7 @@ public class Pawn extends ChessPiece {
             }
         }
         //linkservoor && daar staat enemy
-        testCoord = fromCoord.add(leftFront);
+        testCoord = board.adjustToBoard(fromCoord.add(leftFront));
         if (board.isValidCoordinate(testCoord)) {
             ChessPiece takePiece = board.getPiece(testCoord); //het stuk dat het potentieen kan pakken
             if (toCoord.equals(testCoord) && takePiece != null && !takePiece.isSameColor(this)) {
@@ -71,7 +71,7 @@ public class Pawn extends ChessPiece {
             }
         }
         //rechtservoor && daar staat enemy
-        testCoord = fromCoord.add(rightFront);
+        testCoord = board.adjustToBoard(fromCoord.add(rightFront));
         if (board.isValidCoordinate(testCoord)) {
             ChessPiece takePiece = board.getPiece(testCoord); //het stuk dat het potentieen kan pakken
             if (toCoord.equals(testCoord) && takePiece != null && !takePiece.isSameColor(this)) {
@@ -86,13 +86,13 @@ public class Pawn extends ChessPiece {
     @Override
     public ArrayList<ChessPiece> getAttackedPieces(Board board, Coordinate pieceLocation) {
         ArrayList<ChessPiece> attackedPieces = new ArrayList();
-        Coordinate testCoord = rightFront.add(pieceLocation);
+        Coordinate testCoord = board.adjustToBoard(rightFront.add(pieceLocation));
         if (board.isValidCoordinate(testCoord)) {
             if (board.hasPiece(testCoord)) {
                 attackedPieces.add(board.getPiece(testCoord));
             }
         }
-        testCoord = leftFront.add(pieceLocation);
+        testCoord = board.adjustToBoard(leftFront.add(pieceLocation));
         if (board.isValidCoordinate(testCoord)) {
             if (board.hasPiece(testCoord)) {
                 attackedPieces.add(board.getPiece(testCoord));

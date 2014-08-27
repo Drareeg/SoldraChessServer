@@ -21,29 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package Shared.Chess;
+package Domain.Chess.Variants;
+import Shared.Chess.CilinderBoard;
 
 /**
  *
  * @author Geerard
  */
-public enum Variant {
+public class CilinderChess extends NormalChess {
 
-    ATTRACT("Attract"),
-    TORNADO("Tornado"),
-    HIDDENQUEEN("Hidden Queen"),
-    CLASSIC("Classic"),
-    CILINDER("Cilinder"),
-    ONETWOTHREE("1 2 3 ..");
-
-    private String name;
-
-    Variant(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
+    public CilinderChess() {
+        super();
+        this.board = new CilinderBoard();
     }
 
 }

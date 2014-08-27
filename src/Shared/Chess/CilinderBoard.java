@@ -27,23 +27,39 @@ package Shared.Chess;
  *
  * @author Geerard
  */
-public enum Variant {
+public class CilinderBoard extends Board {
 
-    ATTRACT("Attract"),
-    TORNADO("Tornado"),
-    HIDDENQUEEN("Hidden Queen"),
-    CLASSIC("Classic"),
-    CILINDER("Cilinder"),
-    ONETWOTHREE("1 2 3 ..");
-
-    private String name;
-
-    Variant(String name) {
-        this.name = name;
+    public CilinderBoard() {
     }
 
-    public String getName() {
-        return name;
+    private CilinderBoard(Board board) {
+        position = new Position(board.getPosition());
     }
 
+    @Override
+    public boolean isValidCoordinate(Coordinate coord) {
+        return coord.getCol() <= 15 && coord.getCol() >= -8 && coord.getRow() <= 7 && coord.getRow() >= 0;
+    }
+
+    @Override
+    public ChessPiece getPiece(Coordinate fromCoord) {
+        return position.getPiece(adjustToBoard(fromCoord));
+    }
+
+    @Override
+    public Board getDeepCopy() {
+        return new CilinderBoard(this);
+    }
+
+    //geeft de coordinate die hiermee overeenkomt die wel op het bord ligt (handig voor cilinerschaak)
+    @Override
+    Coordinate adjustToBoard(Coordinate coord) {
+        if (coord.getCol() > 7) {
+            return new Coordinate(coord.getRow(), coord.getCol() - 8);
+        } else if (coord.getCol() < 0) {
+            return new Coordinate(coord.getRow(), coord.getCol() + 8);
+        } else {
+            return coord;
+        }
+    }
 }

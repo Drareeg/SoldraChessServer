@@ -23,14 +23,13 @@
  */
 package Shared.Chess;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  *
  * @author Geerard
  */
 public class Board implements Serializable {
-    private Position position;
+    protected Position position;
 
     //mergen met Position ...?
     public Board() {
@@ -99,6 +98,11 @@ public class Board implements Serializable {
             }
         }
         return false;
+    }
+
+    //geeft de coordinate die hiermee overeenkomt die wel op het bord ligt (handig voor cilinerschaak)
+    Coordinate adjustToBoard(Coordinate coord) {
+        return coord;
     }
 
 }

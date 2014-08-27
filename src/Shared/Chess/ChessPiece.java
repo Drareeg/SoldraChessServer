@@ -56,7 +56,8 @@ public abstract class ChessPiece implements Serializable {
     public boolean canReachFromTo(Coordinate fromCoord, Coordinate toCoord, Board board) {
         for (List<Coordinate> coordList : possibleMovesListList) {
             for (Coordinate diffCoord : coordList) {
-                Coordinate testCoord = diffCoord.add(fromCoord);
+                //TODO: in overschrijvende methoden ook rekening houden met cilinderbord dat testcoord eig veranderd
+                Coordinate testCoord = board.adjustToBoard(diffCoord.add(fromCoord));
                 if (board.isValidCoordinate(testCoord)) {
                     if (board.getPiece(testCoord) != null) {
                         if (this.isSameColor(board.getPiece(testCoord))) {
